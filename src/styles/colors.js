@@ -1,0 +1,27 @@
+// Colors
+
+export const RED = '#D32F39';
+export const WHITE = '#FFFFFF';
+export const BLACK = '#000000';
+export const DARK_GRAY = '#0F191B';
+export const LIGHT_GRAY = '#F3F3F3';
+
+
+// Defaults
+
+export const DEFAULT_BACKGROUND_COLOR = WHITE;
+export const DEFAULT_BACKGROUND_COMPONENT = LIGHT_GRAY;
+export const DEFAULT_TEXT_COLOR = BLACK;
+export const DEFAULT_PRIMARY_COLOR = RED;
+export const DEFAULT_PRIMARY_TEXT = WHITE;
+export const DEFAULT_SECONDARY_COLOR = DARK_GRAY;
+export const DEFAULT_SECONDARY_TEXT = LIGHT_GRAY;
+export const STATUS_BAR_STYLE = 'dark-content';
+
+
+// Bottom Navigation
+
+export const NAVIGATION_INACTIVE_BACKGROUND_COLOR = WHITE;
+export const NAVIGATION_ACTIVE_BACKGROUND_COLOR = LIGHT_GRAY;
+export const NAVIGATION_INACTIVE_ICON_COLOR = BLACK;
+export const NAVIGATION_ACTIVE_ICON_COLOR = DEFAULT_PRIMARY_COLOR;
