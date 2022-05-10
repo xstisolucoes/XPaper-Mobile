@@ -55,6 +55,7 @@ class ListReservedsScreen extends React.Component {
 
         this.state = {
             refreshing: false,
+            connected : true,
         };
     }
 
@@ -76,15 +77,28 @@ class ListReservedsScreen extends React.Component {
                                         style={{
                                             width: '100%',
                                         }}
-                                        data={estoqueReservado}
+                                        data={this.state.connected == false ? [] : estoqueReservado}
                                         renderItem={(object) => (
                                             <ListReservedsItem item={object.item} navigation={this.props.navigation} theme={theme} components={components} />
                                         )}
                                         onRefresh={async () => {
-                                            /*this.setState({refreshing: true});
-                                            await functions.updateEstoqueReservado(filters);
-                                            this.setState({refreshing: false});*/
+                                            await this.setState({
+                                                refreshing: true,
+                                            });
+                                            
+                                            let connected = await Global.checkInternetConnection();
+                                            if (connected) {
+                                                await functions.updateEstoqueReservado(null);
+                                            }
+                                            await this.setState({
+                                                refreshing: false,
+                                                connected : connected,
+                                            });
                                         }}
+                                        ListFooterComponent={() => (
+                                            this.state.connected == false ? <Atoms.Errors.NoConnection /> :
+                                            estoqueReservado.length == 0 ? <Atoms.Errors.NoItens /> : null
+                                        )}
                                         refreshing={this.state.refreshing}
                                         keyExtractor={(item) => item.key}
                                     />

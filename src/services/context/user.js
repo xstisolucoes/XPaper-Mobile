@@ -25,7 +25,7 @@ class UserContextProvider extends React.Component {
         this.updateUser = async () => {
             let data = await getCacheUser();
             let logged = !data || data == null ? false : true;
-            let user = !data || data == null ? {} : new Usuario(data);
+            let user = !data || data == null ? null : new Usuario(data);
             
             if (logged) {
                 user['usu_permissoes'] = await this.getUserPermissions(user['usu_codigo']);
@@ -64,7 +64,7 @@ class UserContextProvider extends React.Component {
             }
 
             this.setState({
-                user    : !user || user == null ? {} : user,
+                user    : !user || user == null ? null : user,
                 isLogged: !user || user == null ? false : true,
             });
 

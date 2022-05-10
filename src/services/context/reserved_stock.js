@@ -17,7 +17,7 @@ export const DEFAULT_FILTERS = [
         type        : Global.FilterType.CHECK,
         fieldName   : 'SER_STATUS',
         values      : [
-            {codigo: 1, label: 'Aberto',     defaultValue: true,  value: true},
+            {codigo: 1, label: 'Solicitado', defaultValue: true,  value: true},
             {codigo: 2, label: 'Separado',   defaultValue: true,  value: true},
             {codigo: 3, label: 'Transbordo', defaultValue: true,  value: true},
             {codigo: 4, label: 'Atendido',   defaultValue: false, value: false},
@@ -55,9 +55,15 @@ class EstoqueReservadoContextProvider extends React.Component {
         super(props);
 
         this.updateEstoqueReservado = async (filters) => {
+            if (filters && filters !== null) {
+                await this.setState({
+                    activeFilter: filters,
+                });
+            }
+
             let data = await getCacheEstoqueReservado();
 
-            let response = await EstoquesReservados.getAllReservedStocks(filters);
+            let response = await EstoquesReservados.getAllReservedStocks(this.state.activeFilter);
 
             if (response.status == 200) {
                 data = response.data.result[0];
@@ -89,6 +95,7 @@ class EstoqueReservadoContextProvider extends React.Component {
         this.state = {
             estoqueReservado: [],
             defaultFilters  : DEFAULT_FILTERS,
+            activeFilter    : DEFAULT_FILTERS,
             functions       : {
                 updateEstoqueReservado: this.updateEstoqueReservado,
                 separeReservedStock   : this.separeReservedStock,

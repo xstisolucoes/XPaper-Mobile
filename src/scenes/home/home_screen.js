@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { Atoms, Molecules } from '_components';
 import * as Icons from '_assets/icons';
 import { Contexts } from '_services';
+import { Global } from '_services';
 
 class HomeScreen extends React.Component {
     constructor(props) {
@@ -10,6 +11,7 @@ class HomeScreen extends React.Component {
 
         this.state = {
             refreshing: false,
+            connected : true,
         };
     }
 
@@ -48,10 +50,28 @@ class HomeScreen extends React.Component {
                                                         {(inspecoesVeiculares) => (
                                                             <Molecules.MenuList 
                                                                 refreshing={this.state.refreshing}
-                                                                onRefresh={() => {
-                                                                    user.functions.updateUser();
+                                                                onRefresh={async () => {
+                                                                    await this.setState({
+                                                                        refreshing: true,
+                                                                    });
+                                                                    let connected = await Global.checkInternetConnection();
+                                                                    if (connected) {
+                                                                        await user.functions.updateUser();
+                                                                    }
+                                                                    await this.setState({
+                                                                        refreshing: false,
+                                                                        connected : connected,
+                                                                    });
                                                                 }}
-                                                                data={this.formatData([
+                                                                ListFooterComponent={() => (
+                                                                    this.state.connected == false ? <Atoms.Errors.NoConnection /> : 
+                                                                    user.isLogged == false ? <Atoms.Errors.NotLogged /> : 
+                                                                    (!(user.user['usu_permissoes']).includes('mobile.modulo_recebimento') &&
+                                                                    !(user.user['usu_permissoes']).includes('mobile.modulo_manutencao') &&
+                                                                    !(user.user['usu_permissoes']).includes('mobile.modulo_inspecao_veicular') &&
+                                                                    !(user.user['usu_permissoes']).includes('mobile.modulo_estoque_reservado')) ? <Atoms.Errors.NoItens /> : null
+                                                                )}
+                                                                data={this.state.connected == false || user.isLogged == false ? [] : this.formatData([
                                                                     (user.isLogged && (user.user['usu_permissoes']).includes('mobile.modulo_recebimento')) ? {
                                                                         key: "module_receivement",
                                                                         name: "Recebimento",

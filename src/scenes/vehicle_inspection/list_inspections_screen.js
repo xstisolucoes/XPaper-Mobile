@@ -62,6 +62,7 @@ class ListInspectionsScreen extends React.Component {
 
         this.state = {
             refreshing: false,
+            connected : true,
         };
     }
 
@@ -83,15 +84,28 @@ class ListInspectionsScreen extends React.Component {
                                         style={{
                                             width: '100%',
                                         }}
-                                        data={inspecoesVeiculares}
+                                        data={this.state.connected == false ? [] : inspecoesVeiculares}
                                         renderItem={(object) => (
                                             <ListInspectionsItem item={object.item} navigation={this.props.navigation} theme={theme} components={components} />
                                         )}
-                                        /*onRefresh={async () => {
-                                            this.setState({refreshing: true});
-                                            await functions.updateInspecoesVeiculares(filters);
-                                            this.setState({refreshing: false});
-                                        }}*/
+                                        onRefresh={async () => {
+                                            await this.setState({
+                                                refreshing: true,
+                                            });
+                                            
+                                            let connected = await Global.checkInternetConnection();
+                                            if (connected) {
+                                                await functions.updateInspecoesVeiculares(null);
+                                            }
+                                            await this.setState({
+                                                refreshing: false,
+                                                connected : connected,
+                                            });
+                                        }}
+                                        ListFooterComponent={() => (
+                                            this.state.connected == false ? <Atoms.Errors.NoConnection /> :
+                                            inspecoesVeiculares.length == 0 ? <Atoms.Errors.NoItens /> : null
+                                        )}
                                         refreshing={this.state.refreshing}
                                         keyExtractor={(item) => item.key}
                                     />

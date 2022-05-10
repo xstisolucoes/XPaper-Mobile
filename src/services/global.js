@@ -1,5 +1,6 @@
 import * as Storage from './storage';
 import { initializeApp } from 'firebase/app';
+import * as Network from 'expo-network';
 
 module.exports = {
     App: null,
@@ -17,6 +18,11 @@ module.exports = {
         TEXT : 'text',
         CHECK: 'check',
         DATE : 'date',
+    },
+
+    checkInternetConnection: async () => {
+        let state = await Network.getNetworkStateAsync();
+        return state.isInternetReachable && state.type == Network.NetworkStateType.WIFI;
     },
 
     formatRequestParams: (params) => {

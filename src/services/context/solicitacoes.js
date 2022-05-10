@@ -17,8 +17,8 @@ export const DEFAULT_FILTERS = [
         type        : Global.FilterType.CHECK,
         fieldName   : 'SOL_STATUS',
         values      : [
-            {codigo: 1, label: 'Solicitado', defaultValue: true,  value: true},
-            {codigo: 2, label: 'Atendido',   defaultValue: false, value: false}
+            {codigo: 1, label: 'Aberto',   defaultValue: true,  value: true},
+            {codigo: 2, label: 'Atendido', defaultValue: false, value: false}
         ],
         title       : 'Status',
         name        : 'status',
@@ -53,9 +53,15 @@ class SolicitacoesContextProvider extends React.Component {
         super(props);
 
         this.updateSolicitacoes = async (filters) => {
+            if (filters && filters !== null) {
+                await this.setState({
+                    activeFilter: filters,
+                });
+            }
+
             let data = await getCacheSolicitacoes();
 
-            let response = await Solicitacoes.getAll(filters);
+            let response = await Solicitacoes.getAll(this.state.activeFilter);
 
             if (response.status == 200) {
                 data = response.data.result[0];
@@ -75,6 +81,7 @@ class SolicitacoesContextProvider extends React.Component {
         this.state = {
             solicitacoes  : [],
             defaultFilters: DEFAULT_FILTERS,
+            activeFilter  : DEFAULT_FILTERS,
             functions     : {
                 updateSolicitacoes: this.updateSolicitacoes,
             }

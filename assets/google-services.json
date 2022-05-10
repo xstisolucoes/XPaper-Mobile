@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "725110291406",
+    "project_id": "xpaper-16725",
+    "storage_bucket": "xpaper-16725.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:725110291406:android:29eced6fb6661a62d9499f",
+        "android_client_info": {
+          "package_name": "com.xstisolucoes.XPaper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "725110291406-j7os7hhibbqd4bvomia1kjnl2ibvu6e8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbAel3_rXKZfAf4SevoB53i84Jdsuo2do"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "725110291406-j7os7hhibbqd4bvomia1kjnl2ibvu6e8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "725110291406-6v81ah9mt828bfivq7gts5fnsg3lvgo2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.xstisolucoes.XPaper"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

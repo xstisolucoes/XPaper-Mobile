@@ -53,9 +53,15 @@ class RecebimentosNotasContextProvider extends React.Component {
         super(props);
 
         this.updateRecebimentosNotas = async (filters) => {
+            if (filters && filters !== null) {
+                await this.setState({
+                    activeFilter: filters,
+                });
+            }
+
             let data = await getCacheRecebimentosNotas();
 
-            let response = await Recebimentos.getAllNotes(filters);
+            let response = await Recebimentos.getAllNotes(this.state.activeFilter);
 
             if (response.status == 200) {
                 data = response.data.result[0];
@@ -88,6 +94,7 @@ class RecebimentosNotasContextProvider extends React.Component {
             recebimentosNotas: [],
             activeNote       : null,
             defaultFilters   : DEFAULT_FILTERS,
+            activeFilter     : DEFAULT_FILTERS,
             functions        : {
                 updateRecebimentosNotas: this.updateRecebimentosNotas,
                 concludeNote           : this.concludeNote,

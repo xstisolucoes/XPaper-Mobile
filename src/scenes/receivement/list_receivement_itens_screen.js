@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FlatList, Pressable, Text, View } from 'react-native';
+import { FlatList, Text, View } from 'react-native';
 import { Atoms } from '_components';
 import { Contexts } from '_services';
 import { Typography } from '_styles';
@@ -23,10 +23,16 @@ const ListReceivementItensItem = (props) => {
                     }}
                 >
                     <Text style={[{fontSize: 18, color: props.theme.defaultTextColor}, Typography.DEFAULT_FONT_BOLD]}>Produto: {Global.numberWithPoints(props.item['pc_codigo'])}</Text>
-                    <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_REGULAR]}>Descrição: {props.item['infe_descricao']}</Text>
-                    <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_REGULAR]}>Quantidade: {Global.formatPoints(props.item['infe_quantidade'])}</Text>
-                    <View style={{width: '100%', flexDirection: 'row'}}>
-                        <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_REGULAR]}>Situação: </Text>
+                    <Text>
+                        <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_BOLD]}>Descrição: </Text>
+                        <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_REGULAR]}>{props.item['infe_descricao']}</Text>
+                    </Text>
+                    <Text>
+                        <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_BOLD]}>Quantidade: </Text>
+                        <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_REGULAR]}>{Global.formatPoints(props.item['infe_quantidade'])}</Text>
+                    </Text>
+                    <Text>
+                        <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_BOLD]}>Situação: </Text>
                         <Text
                             style={[
                                 {
@@ -38,7 +44,7 @@ const ListReceivementItensItem = (props) => {
                         >
                             {props.item['infe_aprovado']}
                         </Text>
-                    </View>
+                    </Text>
                 </Atoms.DefaultCard>
             )}
         </Contexts.RecebimentosNotasChecklist.RecebimentosNotasChecklistContext.Consumer>

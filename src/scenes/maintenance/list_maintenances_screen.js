@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { FlatList, Pressable, Text, View } from 'react-native';
+import { FlatList, Text, View } from 'react-native';
 import { Atoms } from '_components';
-import { Contexts } from '_services';
+import { Global, Contexts } from '_services';
 import { Typography } from '_styles';
 
 const ListMaintenanceItem = (props) => {
@@ -52,6 +52,7 @@ class ListMaintenancesScreen extends React.Component {
 
         this.state = {
             refreshing: false,
+            connected : true,
         };
     }
 
@@ -68,20 +69,33 @@ class ListMaintenancesScreen extends React.Component {
                     <Contexts.Theme.ThemeContext.Consumer>
 				        {({ theme, components }) => (
                             <Contexts.Solicitacoes.SolicitacoesContext.Consumer>
-                                {({ filters, solicitacoes, functions }) => (
+                                {({ solicitacoes, functions }) => (
                                     <FlatList
                                         style={{
                                             width: '100%',
                                         }}
-                                        data={solicitacoes}
+                                        data={this.state.connected == false ? [] : solicitacoes}
                                         renderItem={(object) => (
                                             <ListMaintenanceItem item={object.item} navigation={this.props.navigation} theme={theme} components={components} />
                                         )}
-                                        /*onRefresh={async () => {
-                                            this.setState({refreshing: true});
-                                            await functions.updateSolicitacoes(filters);
-                                            this.setState({refreshing: false});
-                                        }}*/
+                                        onRefresh={async () => {
+                                            await this.setState({
+                                                refreshing: true,
+                                            });
+
+                                            let connected = await Global.checkInternetConnection();
+                                            if (connected) {
+                                                await functions.updateSolicitacoes(null);
+                                            }
+                                            await this.setState({
+                                                refreshing: false,
+                                                connected : connected,
+                                            });
+                                        }}
+                                        ListFooterComponent={() => (
+                                            this.state.connected == false ? <Atoms.Errors.NoConnection /> :
+                                            solicitacoes.length == 0 ? <Atoms.Errors.NoItens /> : null
+                                        )}
                                         refreshing={this.state.refreshing}
                                         keyExtractor={(item) => item.key}
                                     />

@@ -6,5 +6,6 @@ import { default as TogglerButton } from './toggler_button';
 import { default as DefaultChecklist } from './default_checklist';
 import { default as DefaultCard } from './default_card';
 import { default as DefaultDate } from './default_date';
+import * as Errors from './errors';
 
-export { DefaultButton, NavigationScroll, SearchInput, DefaultInput, TogglerButton, DefaultChecklist, DefaultCard, DefaultDate };
+export { DefaultButton, NavigationScroll, SearchInput, DefaultInput, TogglerButton, DefaultChecklist, DefaultCard, DefaultDate, Errors };

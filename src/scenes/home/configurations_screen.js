@@ -104,7 +104,7 @@ class ConfigurationsScreen extends React.Component {
                                                         <Atoms.TogglerButton value={name === 'dark'} onPress={() => functions.toggleTheme()} />
                                                     </ConfigurationItem>
                                                     <Separator theme={theme} />
-                                                    {user.user['usu_permissoes'] && user.user['usu_permissoes'].includes('mobile.alterar_servidor') ?
+                                                    {(user.isLogged && user.user['usu_permissoes'].includes('mobile.alterar_servidor')) ?
                                                         <View style={{width: '100%'}}>
                                                             <ConfigurationItem theme={theme} components={components} title={'IP do Servidor'}>
                                                                 <Atoms.DefaultInput

@@ -54,9 +54,15 @@ class InspecoesVeicularesContextProvider extends React.Component {
         super(props);
 
         this.updateInspecoesVeiculares = async (filters) => {
+            if (filters && filters !== null) {
+                await this.setState({
+                    activeFilter: filters,
+                });
+            }
+
             let data = await getCacheInspecoesVeiculares();
 
-            let response = await InspecoesVeiculares.getAllInspections(filters);
+            let response = await InspecoesVeiculares.getAllInspections(this.state.activeFilter);
 
             if (response.status == 200) {
                 data = response.data.result[0];
@@ -91,6 +97,7 @@ class InspecoesVeicularesContextProvider extends React.Component {
         this.state = {
             inspecoesVeiculares: [],
             defaultFilters     : DEFAULT_FILTERS,
+            activeFilter       : DEFAULT_FILTERS,
             functions          : {
                 updateInspecoesVeiculares: this.updateInspecoesVeiculares,
                 saveInspection           : this.saveInspection,

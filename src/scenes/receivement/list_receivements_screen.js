@@ -65,6 +65,7 @@ class ListReceivementsScreen extends React.Component {
 
         this.state = {
             refreshing: false,
+            connected : true,
         };
     }
 
@@ -86,15 +87,28 @@ class ListReceivementsScreen extends React.Component {
                                         style={{
                                             width: '100%',
                                         }}
-                                        data={recebimentosNotas}
+                                        data={this.state.connected == false ? [] : recebimentosNotas}
                                         renderItem={(object) => (
                                             <ListReceivementItem item={object.item} navigation={this.props.navigation} theme={theme} components={components} />
                                         )}
-                                        /*onRefresh={async () => {
-                                            this.setState({refreshing: true});
-                                            await functions.updateRecebimentosNotas(filters);
-                                            this.setState({refreshing: false});
-                                        }}*/
+                                        onRefresh={async () => {
+                                            await this.setState({
+                                                refreshing: true,
+                                            });
+                                            
+                                            let connected = await Global.checkInternetConnection();
+                                            if (connected) {
+                                                await functions.updateRecebimentosNotas(null);
+                                            }
+                                            await this.setState({
+                                                refreshing: false,
+                                                connected : connected,
+                                            });
+                                        }}
+                                        ListFooterComponent={() => (
+                                            this.state.connected == false ? <Atoms.Errors.NoConnection /> :
+                                            recebimentosNotas.length == 0 ? <Atoms.Errors.NoItens /> : null
+                                        )}
                                         refreshing={this.state.refreshing}
                                         keyExtractor={(item) => item.key}
                                     />
