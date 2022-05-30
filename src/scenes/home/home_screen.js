@@ -48,76 +48,92 @@ class HomeScreen extends React.Component {
                                                 {(estoqueReservado) => (
                                                     <Contexts.InspecoesVeiculares.InspecoesVeicularesContext.Consumer>
                                                         {(inspecoesVeiculares) => (
-                                                            <Molecules.MenuList 
-                                                                refreshing={this.state.refreshing}
-                                                                onRefresh={async () => {
-                                                                    await this.setState({
-                                                                        refreshing: true,
-                                                                    });
-                                                                    let connected = await Global.checkInternetConnection();
-                                                                    if (connected) {
-                                                                        await user.functions.updateUser();
-                                                                    }
-                                                                    await this.setState({
-                                                                        refreshing: false,
-                                                                        connected : connected,
-                                                                    });
-                                                                }}
-                                                                ListFooterComponent={() => (
-                                                                    this.state.connected == false ? <Atoms.Errors.NoConnection /> : 
-                                                                    user.isLogged == false ? <Atoms.Errors.NotLogged /> : 
-                                                                    (!(user.user['usu_permissoes']).includes('mobile.modulo_recebimento') &&
-                                                                    !(user.user['usu_permissoes']).includes('mobile.modulo_manutencao') &&
-                                                                    !(user.user['usu_permissoes']).includes('mobile.modulo_inspecao_veicular') &&
-                                                                    !(user.user['usu_permissoes']).includes('mobile.modulo_estoque_reservado')) ? <Atoms.Errors.NoItens /> : null
+                                                            <Contexts.EstoqueProdutos.EstoqueProdutosContext.Consumer>
+                                                                {(estoqueProdutos) => (
+                                                                    <Molecules.MenuList 
+                                                                        refreshing={this.state.refreshing}
+                                                                        onRefresh={async () => {
+                                                                            await this.setState({
+                                                                                refreshing: true,
+                                                                            });
+                                                                            let connected = await Global.checkInternetConnection();
+                                                                            if (connected) {
+                                                                                await user.functions.updateUser();
+                                                                            }
+                                                                            await this.setState({
+                                                                                refreshing: false,
+                                                                                connected : connected,
+                                                                            });
+                                                                        }}
+                                                                        ListFooterComponent={() => (
+                                                                            this.state.connected == false ? <Atoms.Errors.NoConnection /> : 
+                                                                            user.isLogged == false ? <Atoms.Errors.NotLogged /> : 
+                                                                            (!(user.user['usu_permissoes']).includes('mobile.modulo_recebimento') &&
+                                                                            !(user.user['usu_permissoes']).includes('mobile.modulo_manutencao') &&
+                                                                            !(user.user['usu_permissoes']).includes('mobile.modulo_inspecao_veicular') &&
+                                                                            !(user.user['usu_permissoes']).includes('mobile.modulo_estoque_reservado') &&
+                                                                            !(user.user['usu_permissoes']).includes('mobile.modulo_estoque_produtos')) ? <Atoms.Errors.NoItens /> : null
+                                                                        )}
+                                                                        data={this.state.connected == false || user.isLogged == false ? [] : this.formatData([
+                                                                            (user.isLogged && (user.user['usu_permissoes']).includes('mobile.modulo_recebimento')) ? {
+                                                                                key: "module_receivement",
+                                                                                name: "Recebimento",
+                                                                                onPress: async () => {
+                                                                                    await this.setState({refreshing: true});
+                                                                                    await recebimentoNotas.functions.updateRecebimentosNotas(recebimentoNotas.defaultFilters);
+                                                                                    await this.setState({refreshing: false});
+                                                                                    this.props.navigation.navigate('Receivement');
+                                                                                },
+                                                                                icon: () => (<Icons.Receivement color={'#FFFFFF'} size={36} />),
+                                                                            } : null,
+                                                                            (user.isLogged && (user.user['usu_permissoes']).includes('mobile.modulo_manutencao')) ? {
+                                                                                key: "module_maintenance",
+                                                                                name: "Manutenção",
+                                                                                onPress: async () => {
+                                                                                    await this.setState({refreshing: true});
+                                                                                    await maintenances.functions.updateSolicitacoes(maintenances.defaultFilters);
+                                                                                    await this.setState({refreshing: false});
+                                                                                    this.props.navigation.navigate('Maintenance');
+                                                                                },
+                                                                                icon: () => (<Icons.Maintenance color={'#FFFFFF'} size={36} />),
+                                                                            } : null,
+                                                                            (user.isLogged && (user.user['usu_permissoes']).includes('mobile.modulo_inspecao_veicular')) ? {
+                                                                                key: "module_vehicle_inspection",
+                                                                                name: "Inspeção Veicular",
+                                                                                onPress: async () => {
+                                                                                    await this.setState({refreshing: true});
+                                                                                    await inspecoesVeiculares.functions.updateInspecoesVeiculares(inspecoesVeiculares.defaultFilters);
+                                                                                    await this.setState({refreshing: false});
+                                                                                    this.props.navigation.navigate('VehicleInspection');
+                                                                                },
+                                                                                icon: () => (<Icons.Inspection color={'#FFFFFF'} size={36} />),
+                                                                            } : null,
+                                                                            (user.isLogged && (user.user['usu_permissoes']).includes('mobile.modulo_estoque_reservado')) ? {
+                                                                                key: "module_reserved_stock",
+                                                                                name: "Estoque Reservado",
+                                                                                onPress: async () => {
+                                                                                    await this.setState({refreshing: true});
+                                                                                    await estoqueReservado.functions.updateEstoqueReservado(estoqueReservado.defaultFilters);
+                                                                                    await this.setState({refreshing: false});
+                                                                                    this.props.navigation.navigate('ReservedStock');
+                                                                                },
+                                                                                icon: () => (<Icons.Stock color={'#FFFFFF'} size={36} />),
+                                                                            } : null,
+                                                                            (user.isLogged && (user.user['usu_permissoes']).includes('mobile.modulo_estoque_produtos')) ? {
+                                                                                key: "module_product_stock",
+                                                                                name: "Estoque de Produtos",
+                                                                                onPress: async () => {
+                                                                                    await this.setState({refreshing: true});
+                                                                                    await estoqueProdutos.functions.updateEstoqueProdutos(estoqueProdutos.defaultFilters);
+                                                                                    await this.setState({refreshing: false});
+                                                                                    this.props.navigation.navigate('ProductStock');
+                                                                                },
+                                                                                icon: () => (<Icons.BoxStacked color={'#FFFFFF'} size={36} />),
+                                                                            } : null,
+                                                                        ])}
+                                                                    />
                                                                 )}
-                                                                data={this.state.connected == false || user.isLogged == false ? [] : this.formatData([
-                                                                    (user.isLogged && (user.user['usu_permissoes']).includes('mobile.modulo_recebimento')) ? {
-                                                                        key: "module_receivement",
-                                                                        name: "Recebimento",
-                                                                        onPress: async () => {
-                                                                            await this.setState({refreshing: true});
-                                                                            await recebimentoNotas.functions.updateRecebimentosNotas(recebimentoNotas.defaultFilters);
-                                                                            await this.setState({refreshing: false});
-                                                                            this.props.navigation.navigate('Receivement');
-                                                                        },
-                                                                        icon: () => (<Icons.Receivement color={'#FFFFFF'} size={36} />),
-                                                                    } : null,
-                                                                    (user.isLogged && (user.user['usu_permissoes']).includes('mobile.modulo_manutencao')) ? {
-                                                                        key: "module_maintenance",
-                                                                        name: "Manutenção",
-                                                                        onPress: async () => {
-                                                                            await this.setState({refreshing: true});
-                                                                            await maintenances.functions.updateSolicitacoes(maintenances.defaultFilters);
-                                                                            await this.setState({refreshing: false});
-                                                                            this.props.navigation.navigate('Maintenance');
-                                                                        },
-                                                                        icon: () => (<Icons.Maintenance color={'#FFFFFF'} size={36} />),
-                                                                    } : null,
-                                                                    (user.isLogged && (user.user['usu_permissoes']).includes('mobile.modulo_inspecao_veicular')) ? {
-                                                                        key: "module_vehicle_inspection",
-                                                                        name: "Inspeção Veicular",
-                                                                        onPress: async () => {
-                                                                            await this.setState({refreshing: true});
-                                                                            await inspecoesVeiculares.functions.updateInspecoesVeiculares(inspecoesVeiculares.defaultFilters);
-                                                                            await this.setState({refreshing: false});
-                                                                            this.props.navigation.navigate('VehicleInspection');
-                                                                        },
-                                                                        icon: () => (<Icons.Inspection color={'#FFFFFF'} size={36} />),
-                                                                    } : null,
-                                                                    (user.isLogged && (user.user['usu_permissoes']).includes('mobile.modulo_estoque_reservado')) ? {
-                                                                        key: "module_reserved_stock",
-                                                                        name: "Estoque Reservado",
-                                                                        onPress: async () => {
-                                                                            await this.setState({refreshing: true});
-                                                                            await estoqueReservado.functions.updateEstoqueReservado(estoqueReservado.defaultFilters);
-                                                                            await this.setState({refreshing: false});
-                                                                            this.props.navigation.navigate('ReservedStock');
-                                                                        },
-                                                                        icon: () => (<Icons.Stock color={'#FFFFFF'} size={36} />),
-                                                                    } : null,
-                                                                ])}
-                                                            />
+                                                            </Contexts.EstoqueProdutos.EstoqueProdutosContext.Consumer>
                                                         )}
                                                     </Contexts.InspecoesVeiculares.InspecoesVeicularesContext.Consumer>
                                                 )}

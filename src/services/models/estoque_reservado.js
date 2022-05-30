@@ -5,6 +5,7 @@ class EstoqueReservado extends Model {
 
     _fields = [
         'op_codigo',
+        'ser_fila',
         'er_codigo',
         'pc_codigo',
         'ser_processo',

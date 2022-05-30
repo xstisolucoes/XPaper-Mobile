@@ -4,7 +4,7 @@ import { Atoms } from '_components';
 import { Contexts, Global } from '_services';
 import { Typography } from '_styles';
 
-const ListReservedsItem = (props) => {
+const ListProductProviderItem = (props) => {
     return (
         <Atoms.DefaultCard
             style={{
@@ -15,47 +15,48 @@ const ListReservedsItem = (props) => {
                 color: props.components.list_maintenance_item.rippleColor
             }}
             onPress={async () => {
-                props.navigation.navigate('ReservedStockDetailScreen', {item: props.item});
+                props.navigation.navigate('ProductStockDetailScreen', {item: props.product, forn: props.item});
             }}
         >
-            <Text style={[{fontSize: 18, color: props.theme.defaultTextColor}, Typography.DEFAULT_FONT_BOLD]}>Fila: {props.item['ser_fila']} - {props.item['referencia']}</Text>
+            <Text style={[{fontSize: 18, color: props.theme.defaultTextColor}, Typography.DEFAULT_FONT_BOLD]}>{props.item['pes_fantasia']}</Text>
             <Text>
-                <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_BOLD]}>Medidas: </Text>
-                <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_REGULAR]}>{props.item['pc_medidas']}</Text>
-            </Text>
-            <Text>
-                <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_BOLD]}>Composição: </Text>
-                <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_REGULAR]}>{props.item['compos_descricao']}</Text>
+                <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_BOLD]}>Fornecedor: </Text>
+                <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_REGULAR]}>{props.item['pes_razao']}</Text>
             </Text>
             <Text>
                 <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_BOLD]}>Quantidade: </Text>
-                <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_REGULAR]}>{Global.formatPoints(props.item['ser_quantidade'])}</Text>
+                <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_REGULAR]}>{Global.formatPoints(props.item['pcf_quantidade'])}</Text>
             </Text>
             <Text>
-                <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_BOLD]}>Situação: </Text>
+                <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_BOLD]}>Locais: </Text>
+                <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_REGULAR]}>{props.item['pcf_ruas']}</Text>
+            </Text>
+            <Text>
+                <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_BOLD]}>Status: </Text>
                 <Text
                     style={[
                         {
                             fontSize: 14,
-                            color: props.item['ser_status'] == 'Solicitado' ? props.theme.waiting : props.item['ser_status'] == 'Separado' ? props.theme.inProgress : props.item['ser_status'] == 'Transbordo' ? props.theme.warning : props.theme.success,
+                            color: props.item['pcf_status'] == 'Ativo' ? props.theme.success : props.theme.error,
                         },
                         Typography.SECONDARY_FONT_BOLD
                     ]}
                 >
-                    {props.item['ser_status']}
+                    {props.item['pcf_status']}
                 </Text>
             </Text>
         </Atoms.DefaultCard>
     );
 }
 
-class ListReservedsScreen extends React.Component {
+class ListProductProvidersScreen extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             refreshing: false,
             connected : true,
+            item      : this.props.route.params.item,
         };
     }
 
@@ -71,15 +72,15 @@ class ListReservedsScreen extends React.Component {
                 >
                     <Contexts.Theme.ThemeContext.Consumer>
 				        {({ theme, components }) => (
-                            <Contexts.EstoqueReservado.EstoqueReservadoContext.Consumer>
-                                {({ estoqueReservado, functions }) => (
+                            <Contexts.EstoqueProdutosFornecedores.EstoqueProdutosFornecedoresContext.Consumer>
+                                {({ estoqueProdutosFornecedores, functions }) => (
                                     <FlatList
                                         style={{
                                             width: '100%',
                                         }}
-                                        data={this.state.connected == false ? [] : estoqueReservado}
+                                        data={this.state.connected == false ? [] : estoqueProdutosFornecedores}
                                         renderItem={(object) => (
-                                            <ListReservedsItem item={object.item} navigation={this.props.navigation} theme={theme} components={components} />
+                                            <ListProductProviderItem item={object.item} product={this.state.item} navigation={this.props.navigation} theme={theme} components={components} />
                                         )}
                                         onRefresh={async () => {
                                             await this.setState({
@@ -88,7 +89,7 @@ class ListReservedsScreen extends React.Component {
                                             
                                             let connected = await Global.checkInternetConnection();
                                             if (connected) {
-                                                await functions.updateEstoqueReservado(null);
+                                                await functions.updateEstoqueProdutosFornecedores(null, this.state.item['pc_codigo']);
                                             }
                                             await this.setState({
                                                 refreshing: false,
@@ -97,13 +98,13 @@ class ListReservedsScreen extends React.Component {
                                         }}
                                         ListFooterComponent={() => (
                                             this.state.connected == false ? <Atoms.Errors.NoConnection /> :
-                                            estoqueReservado.length == 0 ? <Atoms.Errors.NoItens /> : null
+                                            estoqueProdutosFornecedores.length == 0 ? <Atoms.Errors.NoItens /> : null
                                         )}
                                         refreshing={this.state.refreshing}
                                         keyExtractor={(item) => item.key}
                                     />
                                 )}
-                            </Contexts.EstoqueReservado.EstoqueReservadoContext.Consumer>
+                            </Contexts.EstoqueProdutosFornecedores.EstoqueProdutosFornecedoresContext.Consumer>
                         )}
                     </Contexts.Theme.ThemeContext.Consumer>
                 </View>
@@ -112,4 +113,4 @@ class ListReservedsScreen extends React.Component {
     }
 }
 
-export default ListReservedsScreen;
+export default ListProductProvidersScreen;

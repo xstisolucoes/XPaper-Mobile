@@ -17,7 +17,7 @@ class ProductLotesScreen extends React.Component {
     finalizarInspecao(functions) {
         Alert.alert(
             'Confirmação',
-            'Deseja salvar as informações da do estoque reservado?',
+            'Deseja salvar as informações do estoque reservado?',
             [
                 {
                     text: 'Cancelar',

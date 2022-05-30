@@ -18,3 +18,4 @@ export { default as Minus } from './minus';
 export { default as NA } from './na';
 export { default as Trash } from './trash';
 export { default as Calendar } from './calendar';
+export { default as BoxStacked } from './box_stacked';

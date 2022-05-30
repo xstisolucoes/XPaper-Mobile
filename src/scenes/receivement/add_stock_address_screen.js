@@ -20,50 +20,38 @@ class AddStockAddressScreen extends React.Component {
 
     finalizarInspecao(functions) {
         let codigo = this._listItens.current.getCodigo();
-        if (codigo == null) {
-            Alert.alert(
-                'Erro',
-                'Selecione um dos endereços antes de finalizar a inspeção',
-                [
-                    {
-                        text: 'Ok',
+        Alert.alert(
+            'Confirmação',
+            'Deseja salvar as informações da inspeção?',
+            [
+                {
+                    text: 'Cancelar',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Confirmar',
+                    onPress: async () => {
+                        await this.setState({
+                            refreshing: true,
+                        });
+                        await functions.saveInspecaoRecebimento(
+                            this.state.item.infe_numero_nf,
+                            this.state.item.infe_serie_nf,
+                            this.state.item.pes_codigo,
+                            this.state.item.infe_codigo,
+                            this.state.item.pc_codigo,
+                            this.state.checklist,
+                            this.state.refugo, 
+                            codigo);
+                        await functions.updateRecebimentosNotasItens(this.state.item.infe_numero_nf);
+                        await this.setState({
+                            refreshing: false,
+                        });
+                        this.props.navigation.pop(this.state.pop);
                     }
-                ],
-            );
-        } else {
-            Alert.alert(
-                'Confirmação',
-                'Deseja salvar as informações da inspeção?',
-                [
-                    {
-                        text: 'Cancelar',
-                        style: 'cancel',
-                    },
-                    {
-                        text: 'Confirmar',
-                        onPress: async () => {
-                            await this.setState({
-                                refreshing: true,
-                            });
-                            await functions.saveInspecaoRecebimento(
-                                this.state.item.infe_numero_nf,
-                                this.state.item.infe_serie_nf,
-                                this.state.item.pes_codigo,
-                                this.state.item.infe_codigo,
-                                this.state.item.pc_codigo,
-                                this.state.checklist,
-                                this.state.refugo, 
-                                codigo);
-                            await functions.updateRecebimentosNotasItens(this.state.item.infe_numero_nf);
-                            await this.setState({
-                                refreshing: false,
-                            });
-                            this.props.navigation.pop(this.state.pop);
-                        }
-                    }
-                ],
-            );
-        }
+                }
+            ],
+        );
     }
 
     render() {

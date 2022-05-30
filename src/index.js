@@ -1,4 +1,4 @@
-import AppLoading from 'expo-app-loading';
+import * as SplashScreen from 'expo-splash-screen';
 import React, { createRef } from 'react';
 import { default as RootNavigator } from '_navigations';
 import { GlobalContext } from '_services';
@@ -6,6 +6,7 @@ import * as Font from 'expo-font';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import { Global } from '_services';
+import { View } from 'react-native';
 
 Global.firebaseApp();
 
@@ -16,13 +17,6 @@ Notifications.setNotificationHandler({
         shouldSetBadge: false,
     }),
 });
-
-let CUSTOM_FONTS = {
-    'AcuminVariableConcept': require('./assets/fonts/AcuminVariableConcept.ttf'),
-    'MyriadProRegular'     : require('./assets/fonts/MyriadProRegular.otf'),
-    'RobotoLight'          : require('./assets/fonts/RobotoLight.ttf'),
-};
-
 class App extends React.Component{
     constructor(props) {
         super(props);
@@ -33,13 +27,27 @@ class App extends React.Component{
             notification: false,
         }
 
+        this.onLayoutRootView = this.onLayoutRootView.bind(this);
+
         this.notificationListener = createRef();
         this.responseListener = createRef();
     }
 
     componentDidMount() {
-        this._loadFontsAsync();
-        this._loadNotificationModule();
+        this._loadSources();
+    }
+
+    async _loadSources() {
+        try {
+            await SplashScreen.preventAutoHideAsync();
+            
+            await this._loadFontsAsync();
+            await this._loadNotificationModule();
+        } finally {
+            this.setState({
+                isReady: true,
+            });
+        }
     }
 
     async registerForPushNotificationsAsync() {
@@ -95,17 +103,31 @@ class App extends React.Component{
     }
 
     async _loadFontsAsync() {
-        await Font.loadAsync(CUSTOM_FONTS);
-        this.setState({
-            isReady: true,
+        await Font.loadAsync({
+            AcuminVariableConcept: require('./assets/fonts/AcuminVariableConcept.ttf'),
+            MyriadProRegular     : require('./assets/fonts/MyriadProRegular.ttf'),
+            RobotoLight          : require('./assets/fonts/RobotoLight.ttf'),
         });
+    }
+
+    async onLayoutRootView() {
+        if (this.state.isReady) {
+            await SplashScreen.hideAsync();
+        }
     }
 
     render() {
         return (
-            <GlobalContext>
-                {this.state.isReady == false ? <AppLoading /> : <RootNavigator />}
-            </GlobalContext>
+            <View
+                style={{
+                    flex: 1,
+                }}
+                onLayout={this.onLayoutRootView}
+            >
+                <GlobalContext>
+                    {this.state.isReady == true ? <RootNavigator /> : null}
+                </GlobalContext>
+            </View>
         );
     }
 }

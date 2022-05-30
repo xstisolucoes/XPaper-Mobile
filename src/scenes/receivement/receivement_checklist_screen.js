@@ -122,7 +122,7 @@ class ReceivementChecklistScreen extends React.Component {
                         await this.setState({
                             refreshing: true,
                         });
-                        await functions.updateProductAddress(1, item.pc_codigo);
+                        await functions.updateProductAddress(1, item.pc_codigo, 1);
                         this.props.navigation.navigate('AddStockAddressScreen', {item: this.state.item, checklist: checklist, refugo: [], pop: 2});
                         await this.setState({
                             refreshing: false,

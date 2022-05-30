@@ -2,7 +2,14 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Contexts } from '_services';
-import { HomeStack, MaintenanceStack, ReceivementStack, ReservedStockStack, VehicleInspectionStack } from './flow_stacks';
+import {
+	HomeStack,
+	MaintenanceStack,
+	ReceivementStack,
+	ReservedStockStack,
+	VehicleInspectionStack,
+	ProductStockStack
+} from './flow_stacks';
 
 const Tab = createNativeStackNavigator();
 
@@ -67,6 +74,13 @@ class RootNavigator extends React.Component {
 							<Tab.Screen 
 								name="VehicleInspection"
 								component={VehicleInspectionStack}
+								options={{
+									orientation: 'all',
+								}}
+							/>
+							<Tab.Screen 
+								name="ProductStock"
+								component={ProductStockStack}
 								options={{
 									orientation: 'all',
 								}}

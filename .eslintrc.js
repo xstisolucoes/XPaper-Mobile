@@ -1,7 +1,7 @@
 module.exports = {
     root: true,
     extends: '@react-native-community',
-    plugins: ['import'],
+    plugins: ['import', 'react-hooks'],
     settings: {
         'import/resolver': {
             node: {
@@ -19,5 +19,9 @@ module.exports = {
                 },
             },
         },
+    },
+    rules: {
+        'react-hooks/rules-of-hooks': 'error',
+        'react-hooks/exhaustive-deps': 'warn',
     },
 };

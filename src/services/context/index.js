@@ -35,6 +35,12 @@ import * as InspecoesVeicularesNotas from './inspecoes_veiculares_notas';
 import { default as InspecoesVeicularesChecklistContextProvider } from './inspecoes_veiculares_checklist';
 import * as InspecoesVeicularesChecklist from './inspecoes_veiculares_checklist';
 
+import { default as EstoqueProdutosContextProvider } from './estoque_produtos';
+import * as EstoqueProdutos from './estoque_produtos';
+
+import { default as EstoqueProdutosFornecedoresContextProvider } from './estoque_produtos_fornecedores';
+import * as EstoqueProdutosFornecedores from './estoque_produtos_fornecedores';
+
 import { default as UserContextProvider } from './user';
 import * as User from './user';
 
@@ -58,7 +64,11 @@ class GlobalContext extends React.Component{
                                                     <InspecoesVeicularesContextProvider>
                                                         <InspecoesVeicularesNotasContextProvider>
                                                             <InspecoesVeicularesChecklistContextProvider>
-                                                                {this.props.children}
+                                                                <EstoqueProdutosContextProvider>
+                                                                    <EstoqueProdutosFornecedoresContextProvider>
+                                                                        {this.props.children}
+                                                                    </EstoqueProdutosFornecedoresContextProvider>
+                                                                </EstoqueProdutosContextProvider>
                                                             </InspecoesVeicularesChecklistContextProvider>
                                                         </InspecoesVeicularesNotasContextProvider>
                                                     </InspecoesVeicularesContextProvider>
@@ -89,5 +99,7 @@ export {
     InspecoesVeiculares,
     InspecoesVeicularesNotas,
     InspecoesVeicularesChecklist,
+    EstoqueProdutos,
+    EstoqueProdutosFornecedores,
     User
 };

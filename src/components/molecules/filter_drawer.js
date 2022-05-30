@@ -11,6 +11,10 @@ const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 
 const FilterViewItem = (props) => {
+    if (props.item.visible == false) {
+        return null;
+    }
+
     if (props.item.type == Global.FilterType.TEXT) {
         return (
             <Atoms.DefaultInput
@@ -45,9 +49,9 @@ const FilterViewItem = (props) => {
                 style={{marginVertical: 10}}
             />
         );
-    } else {
-        return null;
     }
+
+    return null;
 }
 
 class FilterDrawer extends React.Component {

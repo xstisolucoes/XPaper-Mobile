@@ -22,10 +22,10 @@ class ProductAddressContextProvider extends React.Component {
     constructor(props) {
         super(props);
 
-        this.updateProductAddress = async (emp_codigo, pc_codigo) => {
+        this.updateProductAddress = async (emp_codigo, pc_codigo, pcf_codigo) => {
             let data = await getCacheProductAddress();
 
-            let response = await Recebimentos.getAllProductAddress(emp_codigo, pc_codigo);
+            let response = await Recebimentos.getAllProductAddress(emp_codigo, pc_codigo, pcf_codigo);
 
             if (response.status == 200) {
                 data = response.data.result[0];
