@@ -98,7 +98,7 @@ class ReceivementRefugoScreen extends React.Component {
                                                                                 await this.setState({
                                                                                     refreshing: true,
                                                                                 });
-                                                                                await productAddress.functions.updateProductAddress(1, item.pc_codigo);
+                                                                                await productAddress.functions.updateProductAddress(1, item.pc_codigo, item.pcf_codigo);
                                                                                 this.props.navigation.navigate('AddStockAddressScreen', {item: this.state.item, checklist: checklist, refugo: refugo, pop: 3});
                                                                                 await this.setState({
                                                                                     refreshing: false,

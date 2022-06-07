@@ -22,6 +22,7 @@ const getCacheConfigurations = async () => {
     }
 
     return configurations;
+    
 }
 
 class ConfigurationsContextProvider extends React.Component {

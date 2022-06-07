@@ -31,7 +31,7 @@ class ReservedStockDetailScreen extends React.Component {
                                     {
                                         text: 'Ok',
                                         onPress: async () => {
-                                            await functions.updateProductAddress(1, this.state.item.pc_codigo);
+                                            await functions.updateProductAddress(1, this.state.item.pc_codigo, this.state.item.pcf_codigo);
                                             this.props.navigation.navigate('RemoveStockAddressScreen', {item: this.state.item});
                                         }
                                     }

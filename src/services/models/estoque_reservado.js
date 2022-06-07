@@ -8,6 +8,7 @@ class EstoqueReservado extends Model {
         'ser_fila',
         'er_codigo',
         'pc_codigo',
+        'pcf_codigo',
         'ser_processo',
         'ser_data_solicitacao',
         'referencia',

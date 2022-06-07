@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FlatList, Pressable, Text, View } from 'react-native';
 import { Atoms } from '_components';
-import { Contexts } from '_services';
+import { Contexts, Global } from '_services';
 import { Typography } from '_styles';
 
 const ListReceivementItem = (props) => {

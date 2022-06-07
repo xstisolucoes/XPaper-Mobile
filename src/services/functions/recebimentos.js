@@ -108,8 +108,6 @@ export const getAllProductAddress = async (emp_codigo, pc_codigo, pcf_codigo) =>
 
     const url = (await Global.url()) + Global.Modules.GESTAO_QUALIDADE + '/BuscarRuas' + params;
 
-    console.log(url);
-
     await axios.get(url)
         .then(async (response) => {
             requestResponse = response;
@@ -134,7 +132,5 @@ export const concludeNote = async (nfe_codigo, nfe_serie, pes_codigo) => {
             requestResponse = response;
         });
 
-
-    console.log(requestResponse);
     return requestResponse;
 }

@@ -5,6 +5,7 @@ class RecebimentoNotaItem extends Model {
 
     _fields = [
         'pc_codigo',
+        'pcf_codigo',
         'infe_descricao',
         'infe_quantidade',
         'infe_numero_nf',
