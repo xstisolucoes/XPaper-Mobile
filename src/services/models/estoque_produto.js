@@ -5,6 +5,7 @@ class EstoqueProduto extends Model {
 
     _fields = [
         'pc_codigo',
+        'pcf_codigo',
         'pc_descricao_completa',
         'pc_descricao',
         'pc_medidas',
@@ -13,6 +14,12 @@ class EstoqueProduto extends Model {
         'pc_quantidade',
         'pc_ruas',
         'pc_status',
+        'pes_forn_fantasia',
+        'pes_forn_razao_social',
+        'cps_descricao',
+        'pc_qtde_estoque',
+        'pcf_qtde_estoque',
+        'pcf_status',
     ];
 
     constructor(values = {}) {

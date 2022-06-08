@@ -1,4 +1,3 @@
-import * as SplashScreen from 'expo-splash-screen';
 import React, { createRef } from 'react';
 import { default as RootNavigator } from '_navigations';
 import { GlobalContext } from '_services';
@@ -7,6 +6,7 @@ import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import { Global } from '_services';
 import { View } from 'react-native';
+import AppLoading from 'expo-app-loading';
 
 Global.firebaseApp();
 
@@ -27,8 +27,6 @@ class App extends React.Component{
             notification: false,
         }
 
-        this.onLayoutRootView = this.onLayoutRootView.bind(this);
-
         this.notificationListener = createRef();
         this.responseListener = createRef();
     }
@@ -39,7 +37,6 @@ class App extends React.Component{
 
     async _loadSources() {
         try {
-            await SplashScreen.preventAutoHideAsync();
             
             await this._loadFontsAsync();
             await this._loadNotificationModule();
@@ -110,22 +107,22 @@ class App extends React.Component{
         });
     }
 
-    async onLayoutRootView() {
-        if (this.state.isReady) {
-            await SplashScreen.hideAsync();
-        }
-    }
-
     render() {
+        if (this.state.isReady == false) {
+            this._loadSources();
+        }
+        
         return (
+            this.state.isReady == false ?
+            <AppLoading/>
+                :
             <View
                 style={{
                     flex: 1,
                 }}
-                onLayout={this.onLayoutRootView}
             >
                 <GlobalContext>
-                    {this.state.isReady == true ? <RootNavigator /> : null}
+                    <RootNavigator />
                 </GlobalContext>
             </View>
         );

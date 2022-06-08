@@ -94,12 +94,22 @@ class EstoqueProdutosContextProvider extends React.Component {
             });
         }
 
+        this.addProductStock = async (emp_codigo, pc_codigo, pcf_codigo, data) => {
+            await EstoqueProdutosFunc.addProductStock(emp_codigo, pc_codigo, pcf_codigo, data);
+        }
+
+        this.removeProductStock = async (emp_codigo, pc_codigo, pcf_codigo, data) => {
+            await EstoqueProdutosFunc.removeProductStock(emp_codigo, pc_codigo, pcf_codigo, data);
+        }
+
         this.state = {
             estoqueProdutos: [],
             defaultFilters : DEFAULT_FILTERS,
             activeFilter   : DEFAULT_FILTERS,
             functions      : {
                 updateEstoqueProdutos: this.updateEstoqueProdutos,
+                addProductStock      : this.addProductStock,
+                removeProductStock   : this.removeProductStock,
             }
         }
     }

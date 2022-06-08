@@ -8,7 +8,6 @@ class ProductStockDetailScreen extends React.Component {
         super(props);
         this.state = {
             item: this.props.route.params.item,
-            forn: this.props.route.params.forn,
         }
     }
 
@@ -20,8 +19,8 @@ class ProductStockDetailScreen extends React.Component {
                 {
                     text: 'Ok',
                     onPress: async () => {
-                        await functions.updateProductAddress(1, this.state.forn.pc_codigo, this.state.forn.pcf_codigo);
-                        this.props.navigation.navigate('RemoveStockAddressScreen', {item: this.state.item, forn: this.state.forn});
+                        await functions.updateProductAddress(1, this.state.item.pc_codigo, this.state.item.pcf_codigo);
+                        this.props.navigation.navigate('RemoveStockAddressScreen', {item: this.state.item});
                     }
                 }
             ],
@@ -36,8 +35,8 @@ class ProductStockDetailScreen extends React.Component {
                 {
                     text: 'Ok',
                     onPress: async () => {
-                        await functions.updateProductAddress(1, this.state.forn.pc_codigo, this.state.forn.pcf_codigo);
-                        this.props.navigation.navigate('AddStockAddressScreen', {item: this.state.item, forn: this.state.forn});
+                        await functions.updateProductAddress(1, this.state.item.pc_codigo, this.state.item.pcf_codigo);
+                        this.props.navigation.navigate('AddStockAddressScreen', {item: this.state.item});
                     }
                 }
             ],
@@ -60,12 +59,13 @@ class ProductStockDetailScreen extends React.Component {
                             <Atoms.DefaultInput labelTitle={'Código do Produto'} multiline={true} disabled value={Global.numberWithPoints(this.state.item['pc_codigo'])} />
                             <Atoms.DefaultInput labelTitle={'Descrição'} multiline={true} disabled value={this.state.item['pc_descricao']} />
                             <Atoms.DefaultInput labelTitle={'Medidas'} multiline={true} disabled value={this.state.item['pc_medidas']} />
-                            <Atoms.DefaultInput labelTitle={'Composição'} multiline={true} disabled value={this.state.item['pc_composicao']} />
+                            <Atoms.DefaultInput labelTitle={'Composição Interna'} multiline={true} disabled value={this.state.item['pc_composicao']} />
+                            <Atoms.DefaultInput labelTitle={'Composição do Fornecedor'} multiline={true} disabled value={this.state.item['cps_descricao']} />
                             <Atoms.DefaultInput labelTitle={'Vincos'} multiline={true} disabled value={this.state.item['pc_vincos']} />
-                            <Atoms.DefaultInput labelTitle={'Fornecedor'} multiline={true} disabled value={this.state.forn['pes_fantasia']} />
-                            <Atoms.DefaultInput labelTitle={'Razão Social'} multiline={true} disabled value={this.state.forn['pes_razao']} />
-                            <Atoms.DefaultInput labelTitle={'Status'} multiline={true} disabled value={this.state.forn['pcf_status']} />
-                            {this.state.forn['pcf_status'] == 'Ativo' ?
+                            <Atoms.DefaultInput labelTitle={'Fornecedor'} multiline={true} disabled value={this.state.item['pes_forn_fantasia']} />
+                            <Atoms.DefaultInput labelTitle={'Razão Social'} multiline={true} disabled value={this.state.item['pes_forn_razao_social']} />
+                            <Atoms.DefaultInput labelTitle={'Status'} multiline={true} disabled value={this.state.item['pcf_status']} />
+                            {this.state.item['pcf_status'] == 'Ativo' ?
                                 <View
                                     style={{
                                         width: '100%',

@@ -29,7 +29,6 @@ class AddStockAddressScreen extends React.Component {
         this.state = {
             refreshing: false,
             item      : this.props.route.params.item,
-            forn      : this.props.route.params.forn,
         };
 
         this._listItens = React.createRef();
@@ -76,12 +75,13 @@ class AddStockAddressScreen extends React.Component {
                                 refreshing: true,
                             });
 
-                            await functions.addProductStock(1, this.state.forn['pc_codigo'], this.state.forn['pcf_codigo'], data);
+                            await functions.addProductStock(1, this.state.item['pc_codigo'], this.state.item['pcf_codigo'], data);
+                            await functions.updateEstoqueProdutos();
 
                             await this.setState({
                                 refreshing: true,
                             });
-                            this.props.navigation.pop();
+                            this.props.navigation.pop(2);
                         }
                     }
                 ],
@@ -101,7 +101,7 @@ class AddStockAddressScreen extends React.Component {
                         paddingTop: 20,
                     }}
                 >
-                    <Contexts.EstoqueProdutosFornecedores.EstoqueProdutosFornecedoresContext.Consumer>
+                    <Contexts.EstoqueProdutos.EstoqueProdutosContext.Consumer>
                         {(productStockProviders) => (
                             <Contexts.ProductAddress.ProductAddressContext.Consumer>
                                 {({ productAddress, functions }) => (
@@ -115,7 +115,7 @@ class AddStockAddressScreen extends React.Component {
                                         )}
                                         onRefresh={async () => {
                                             this.setState({refreshing: true});
-                                            await functions.updateProductAddress(1, this.state.forn['pc_codigo'], this.state.forn['pcf_codigo']);
+                                            await functions.updateProductAddress(1, this.state.item['pc_codigo'], this.state.item['pcf_codigo']);
                                             this.setState({refreshing: false});
                                         }}
                                         refreshing={this.state.refreshing}
@@ -144,7 +144,7 @@ class AddStockAddressScreen extends React.Component {
                                 )}
                             </Contexts.ProductAddress.ProductAddressContext.Consumer>
                         )}
-                    </Contexts.EstoqueProdutosFornecedores.EstoqueProdutosFornecedoresContext.Consumer>
+                    </Contexts.EstoqueProdutos.EstoqueProdutosContext.Consumer>
                 </View>
             </Atoms.NavigationScroll>
         );

@@ -10,7 +10,6 @@ import { default as InspecaoVeicularNota } from './inspecao_veicular_nota';
 import { default as InspecaoVeicularChecklist } from './inspecao_veicular_checklist';
 import { default as ProdutoRua } from './produto_rua';
 import { default as EstoqueProduto } from './estoque_produto';
-import { default as EstoqueProdutoForn } from './estoque_produto_forn';
 
 export {
     Usuario,
@@ -24,6 +23,5 @@ export {
     InspecaoVeicularNota,
     InspecaoVeicularChecklist,
     ProdutoRua,
-    EstoqueProduto,
-    EstoqueProdutoForn
+    EstoqueProduto
 };

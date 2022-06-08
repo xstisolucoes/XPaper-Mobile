@@ -38,9 +38,6 @@ import * as InspecoesVeicularesChecklist from './inspecoes_veiculares_checklist'
 import { default as EstoqueProdutosContextProvider } from './estoque_produtos';
 import * as EstoqueProdutos from './estoque_produtos';
 
-import { default as EstoqueProdutosFornecedoresContextProvider } from './estoque_produtos_fornecedores';
-import * as EstoqueProdutosFornecedores from './estoque_produtos_fornecedores';
-
 import { default as UserContextProvider } from './user';
 import * as User from './user';
 
@@ -65,9 +62,7 @@ class GlobalContext extends React.Component{
                                                         <InspecoesVeicularesNotasContextProvider>
                                                             <InspecoesVeicularesChecklistContextProvider>
                                                                 <EstoqueProdutosContextProvider>
-                                                                    <EstoqueProdutosFornecedoresContextProvider>
-                                                                        {this.props.children}
-                                                                    </EstoqueProdutosFornecedoresContextProvider>
+                                                                    {this.props.children}
                                                                 </EstoqueProdutosContextProvider>
                                                             </InspecoesVeicularesChecklistContextProvider>
                                                         </InspecoesVeicularesNotasContextProvider>
@@ -100,6 +95,5 @@ export {
     InspecoesVeicularesNotas,
     InspecoesVeicularesChecklist,
     EstoqueProdutos,
-    EstoqueProdutosFornecedores,
     User
 };

@@ -6,7 +6,7 @@ import { Typography } from '_styles';
 
 const ListProductStockItem = (props) => {
     return (
-        <Contexts.EstoqueProdutosFornecedores.EstoqueProdutosFornecedoresContext.Consumer>
+        <Contexts.EstoqueProdutos.EstoqueProdutosContext.Consumer>
             {({ functions }) => (
                 <Atoms.DefaultCard
                     style={{
@@ -17,18 +17,21 @@ const ListProductStockItem = (props) => {
                         color: props.components.list_maintenance_item.rippleColor
                     }}
                     onPress={async () => {
-                        await functions.updateEstoqueProdutosFornecedores(null, props.item['pc_codigo']);
-                        props.navigation.navigate('ListProductProvidersScreen', {item: props.item});
+                        props.navigation.navigate('ProductStockDetailScreen', {item: props.item});
                     }}
                 >
-                    <Text style={[{fontSize: 18, color: props.theme.defaultTextColor}, Typography.DEFAULT_FONT_BOLD]}>Produto: {Global.numberWithPoints(props.item['pc_codigo'])}</Text>
+                    <Text style={[{fontSize: 18, color: props.theme.defaultTextColor}, Typography.DEFAULT_FONT_BOLD]}>Produto: {Global.numberWithPoints(props.item['pc_codigo'])} - {props.item['pes_forn_fantasia']}</Text>
                     <Text>
                         <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_BOLD]}>Descrição: </Text>
                         <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_REGULAR]}>{props.item['pc_descricao_completa']}</Text>
                     </Text>
                     <Text>
                         <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_BOLD]}>Quantidade: </Text>
-                        <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_REGULAR]}>{Global.formatPoints(props.item['pc_quantidade'])}</Text>
+                        <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_REGULAR]}>{Global.formatPoints(props.item['pcf_qtde_estoque'])}</Text>
+                    </Text>
+                    <Text>
+                        <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_BOLD]}>Composição do Fornecedor: </Text>
+                        <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_REGULAR]}>{props.item['cps_descricao']}</Text>
                     </Text>
                     <Text>
                         <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_BOLD]}>Locais: </Text>
@@ -40,17 +43,17 @@ const ListProductStockItem = (props) => {
                             style={[
                                 {
                                     fontSize: 14,
-                                    color: props.item['pc_status'] == 'Ativo' ? props.theme.success : props.theme.error,
+                                    color: props.item['pcf_status'] == 'Ativo' ? props.theme.success : props.theme.error,
                                 },
                                 Typography.SECONDARY_FONT_BOLD
                             ]}
                         >
-                            {props.item['pc_status']}
+                            {props.item['pcf_status']}
                         </Text>
                     </Text>
                 </Atoms.DefaultCard>
             )}
-        </Contexts.EstoqueProdutosFornecedores.EstoqueProdutosFornecedoresContext.Consumer>
+        </Contexts.EstoqueProdutos.EstoqueProdutosContext.Consumer>
     );
 }
 
