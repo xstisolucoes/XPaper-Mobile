@@ -17,7 +17,9 @@ class EstoqueReservado extends Model {
         'compos_descricao',
         'ser_data_solicitacao',
         'ser_quantidade',
+        'ruas',
         'ser_status',
+        'set_descricao',
     ];
 
     constructor(values = {}) {

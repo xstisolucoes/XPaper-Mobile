@@ -18,7 +18,7 @@ class AddStockAddressScreen extends React.Component {
         this._listItens = React.createRef();
     }
 
-    finalizarInspecao(functions) {
+    finalizarInspecao(functions, pes_codigo) {
         let codigo = this._listItens.current.getCodigo();
         Alert.alert(
             'Confirmação',
@@ -40,6 +40,7 @@ class AddStockAddressScreen extends React.Component {
                             this.state.item.pes_codigo,
                             this.state.item.infe_codigo,
                             this.state.item.pc_codigo,
+                            pes_codigo,
                             this.state.checklist,
                             this.state.refugo, 
                             codigo);
@@ -66,49 +67,53 @@ class AddStockAddressScreen extends React.Component {
                         padding: 20,
                     }}
                 >
-                    <Contexts.RecebimentosNotasItens.RecebimentosNotasItensContext.Consumer>
-                        {(recebimentosNotasItens) => (
-                            <Contexts.ProductAddress.ProductAddressContext.Consumer>
-                                {({ productAddress, functions }) => (
-                                    <Molecules.RadioList 
-                                        refreshing={this.state.refreshing}
-                                        ref={this._listItens}
-                                        onRefresh={async () => {
-                                            this.setState({refreshing: true});
-                                            await functions.updateProductAddress(this.state.item['pc_codigo'], this.state.item['emp_codigo']);
-                                            this.setState({refreshing: false});
-                                        }}
-                                        fieldName={{
-                                            codigo: 're_codigo',
-                                            title: 're_nome',
-                                        }}
-                                        keyExtractor={(item) => item.key}
-                                        data={productAddress}
-                                        ListFooterComponent={() => (
-                                            <View
-                                                style={{
-                                                    width: '100%',
-                                                    padding: 20,
-                                                    alignItems: 'center',
+                    <Contexts.User.UserContext.Consumer>
+                        {(user) => (
+                            <Contexts.RecebimentosNotasItens.RecebimentosNotasItensContext.Consumer>
+                                {(recebimentosNotasItens) => (
+                                    <Contexts.ProductAddress.ProductAddressContext.Consumer>
+                                        {({ productAddress, functions }) => (
+                                            <Molecules.RadioList 
+                                                refreshing={this.state.refreshing}
+                                                ref={this._listItens}
+                                                onRefresh={async () => {
+                                                    this.setState({refreshing: true});
+                                                    await functions.updateProductAddress(this.state.item['pc_codigo'], this.state.item['emp_codigo']);
+                                                    this.setState({refreshing: false});
                                                 }}
-                                            >
-                                                <Atoms.DefaultButton
-                                                    style={{
-                                                        width: '100%',
-                                                        maxWidth: 200,
-                                                    }}
-                                                    title={'Finalizar'}
-                                                    onPress={() => {
-                                                        this.finalizarInspecao(recebimentosNotasItens.functions)
-                                                    }}
-                                                />
-                                            </View>
+                                                fieldName={{
+                                                    codigo: 're_codigo',
+                                                    title: 're_nome',
+                                                }}
+                                                keyExtractor={(item) => item.key}
+                                                data={productAddress}
+                                                ListFooterComponent={() => (
+                                                    <View
+                                                        style={{
+                                                            width: '100%',
+                                                            padding: 20,
+                                                            alignItems: 'center',
+                                                        }}
+                                                    >
+                                                        <Atoms.DefaultButton
+                                                            style={{
+                                                                width: '100%',
+                                                                maxWidth: 200,
+                                                            }}
+                                                            title={'Finalizar'}
+                                                            onPress={() => {
+                                                                this.finalizarInspecao(recebimentosNotasItens.functions, user.user.pes_codigo);
+                                                            }}
+                                                        />
+                                                    </View>
+                                                )}
+                                            />
                                         )}
-                                    />
+                                    </Contexts.ProductAddress.ProductAddressContext.Consumer>
                                 )}
-                            </Contexts.ProductAddress.ProductAddressContext.Consumer>
+                            </Contexts.RecebimentosNotasItens.RecebimentosNotasItensContext.Consumer>
                         )}
-                    </Contexts.RecebimentosNotasItens.RecebimentosNotasItensContext.Consumer>
+                    </Contexts.User.UserContext.Consumer>
                 </View>
             </Atoms.NavigationScroll>
         );

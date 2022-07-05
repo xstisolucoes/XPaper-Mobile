@@ -8,6 +8,7 @@ class RecebimentoNotaChecklist extends Model {
         'p_descricao',
         'p_tipo',
         'p_value',
+        'sub_perguntas',
     ];
 
     constructor(values = {}) {

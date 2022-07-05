@@ -73,18 +73,19 @@ export const getAllNotesRefugo = async (nfe_codigo, nfe_serie, pes_codigo, infe_
     return requestResponse;
 }
 
-export const saveInspecao = async (nfe_codigo, nfe_serie, pes_codigo, infe_codigo, pc_codigo, perguntas, refugos, rua_codigo) => {
+export const saveInspecao = async (nfe_codigo, nfe_serie, pes_codigo, infe_codigo, pc_codigo, usu_pes_codigo, perguntas, refugos, rua_codigo) => {
     let requestResponse = [];
 
     const params = Global.formatRequestParamsBody({
-        nfe_codigo : nfe_codigo,
-        nfe_serie  : nfe_serie,
-        pes_codigo : pes_codigo,
-        infe_codigo: infe_codigo,
-        pc_codigo  : pc_codigo,
-        perguntas  : perguntas,
-        refugos    : refugos,
-        rua_codigo : rua_codigo,
+        nfe_codigo    : nfe_codigo,
+        nfe_serie     : nfe_serie,
+        pes_codigo    : pes_codigo,
+        infe_codigo   : infe_codigo,
+        pc_codigo     : pc_codigo,
+        usu_pes_codigo: usu_pes_codigo,
+        perguntas     : perguntas,
+        refugos       : refugos,
+        rua_codigo    : rua_codigo,
     });
 
     const url = (await Global.url()) + Global.Modules.GESTAO_QUALIDADE + '/%22SalvarInspecaoRecebimento%22/';

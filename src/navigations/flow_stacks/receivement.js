@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Molecules } from '_components';
-import { ListReceivementsScreen, ListReceivementItensScreen, ReceivementChecklistScreen, ReceivementRefugoScreen, AddStockAddressScreen } from '_scenes/receivement';
+import { ListReceivementsScreen, ListReceivementItensScreen, ReceivementChecklistScreen, ReceivementRefugoScreen, AddStockAddressScreen, ReceivementSubquestionsScreen } from '_scenes/receivement';
 import { Contexts } from '_services';
 import { Alert } from 'react-native';
 
@@ -146,6 +146,16 @@ class ReceivementStack extends React.Component {
 								{(props) => <ReceivementChecklistScreen {...{...props, ...{stack: this}}} />}
 							</Receivement.Screen>
 							<Receivement.Screen
+								name={'ReceivementSubquestionsScreen'}
+								options={{
+									title       : "Detalhes",
+									filterDrawer: this._filterDrawer,
+									orientation : 'all',
+								}}
+							>
+								{(props) => <ReceivementSubquestionsScreen {...{...props, ...{stack: this}}} />}
+							</Receivement.Screen>
+							<Receivement.Screen
 								name={'ReceivementRefugoScreen'}
 								options={{
 									title       : "Refugo",
@@ -154,16 +164,6 @@ class ReceivementStack extends React.Component {
 								}}
 							>
 								{(props) => <ReceivementRefugoScreen {...{...props, ...{stack: this}}} />}
-							</Receivement.Screen>
-							<Receivement.Screen
-								name={'AddStockAddressScreen'}
-								options={{
-									title       : "Endereços de Estoque",
-									filterDrawer: this._filterDrawer,
-									orientation : 'all',
-								}}
-							>
-								{(props) => <AddStockAddressScreen {...{...props, ...{stack: this}}} />}
 							</Receivement.Screen>
 						</Receivement.Navigator>
 					</Molecules.FilterDrawer>

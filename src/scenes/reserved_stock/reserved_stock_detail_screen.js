@@ -74,13 +74,14 @@ class ReservedStockDetailScreen extends React.Component {
                                     }}
                                 >
                                     <Atoms.DefaultInput labelTitle={'Ordem de Produção'} multiline={true} disabled value={this.state.item['op_codigo']} />
+                                    <Atoms.DefaultInput labelTitle={'Setor Solicitante'} multiline={true} disabled value={this.state.item['set_descricao']} />
                                     <Atoms.DefaultInput labelTitle={'Máquina'} multiline={true} disabled value={this.state.item['ser_processo']} />
                                     <Atoms.DefaultInput labelTitle={'Data de solicitação'} multiline={true} disabled value={this.state.item['ser_data_solicitacao']} />
                                     <Atoms.DefaultInput labelTitle={'Referência'} multiline={true} disabled value={this.state.item['referencia']} />
                                     <Atoms.DefaultInput labelTitle={'Cliente'} multiline={true} disabled value={this.state.item['fantasia']} />
-                                    <Atoms.DefaultInput labelTitle={'Composição'} multiline={true} disabled value={this.state.item['compos_descricao']} />
+                                    <Atoms.DefaultInput labelTitle={'Papelão Ondulado'} multiline={true} disabled value={this.state.item['compos_descricao']} />
                                     <Atoms.DefaultInput labelTitle={'Medidas'} multiline={true} disabled value={this.state.item['pc_medidas']} />
-                                    <Atoms.DefaultInput labelTitle={'Quantidade'} multiline={true} disabled value={Global.formatPoints(this.state.item['ser_quantidade'])} />
+                                    <Atoms.DefaultInput labelTitle={'Quantidade'} multiline={true} disabled value={this.state.item['ser_quantidade']} />
                                     <Atoms.DefaultInput labelTitle={'Status'} multiline={true} disabled value={this.state.item['ser_status']} />
                                     {this.state.item['ser_status'] !== 'Atendido' ? 
                                         <View

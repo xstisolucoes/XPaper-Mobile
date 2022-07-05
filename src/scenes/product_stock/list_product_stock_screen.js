@@ -30,7 +30,7 @@ const ListProductStockItem = (props) => {
                         <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_REGULAR]}>{Global.formatPoints(props.item['pcf_qtde_estoque'])}</Text>
                     </Text>
                     <Text>
-                        <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_BOLD]}>Composição do Fornecedor: </Text>
+                        <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_BOLD]}>P.O. do Fornecedor: </Text>
                         <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_REGULAR]}>{props.item['cps_descricao']}</Text>
                     </Text>
                     <Text>

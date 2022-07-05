@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { FlatList, Pressable, Text, View } from 'react-native';
+import { Alert, FlatList, Pressable, Text, View } from 'react-native';
 import { Atoms } from '_components';
-import { Contexts } from '_services';
+import { Contexts, Global } from '_services';
 import { Typography } from '_styles';
 
 const Separator = (props) => (
@@ -61,6 +61,11 @@ class ConfigurationsScreen extends React.Component {
     constructor(props) {
         super(props);
 
+        this.configs       = Global.getConfigs();
+        this.server_ip     = React.createRef();
+        this.server_method = React.createRef();
+        this.server_port   = React.createRef();
+
         this.state = {
             refreshing: false,
         }
@@ -70,9 +75,9 @@ class ConfigurationsScreen extends React.Component {
         return (
             <Atoms.NavigationScroll noScroll>
                 <Contexts.Theme.ThemeContext.Consumer>
-                    {({ name, theme, components, functions }) => (
+                    {(theme) => (
                         <Contexts.Configurations.ConfigurationsContext.Consumer>
-                            {(configs) => (
+                            {({ functions }) => (
                                 <Contexts.User.UserContext.Consumer>
                                     {(user) => (
                                         <FlatList
@@ -96,55 +101,70 @@ class ConfigurationsScreen extends React.Component {
                                                         alignItems: 'center',
                                                     }}
                                                 >
-                                                    <ConfigurationItem theme={theme} components={components} title={user.isLogged == true ? 'Usuario: ' + user.user['pes_fantasia'] : 'Entrar'} onPress={() => {
+                                                    <ConfigurationItem theme={theme.theme} components={theme.components} title={user.isLogged == true ? 'Usuario: ' + user.user['pes_fantasia'] : 'Entrar'} onPress={() => {
                                                         this.props.navigation.navigate(user.isLogged == true ? 'UserProfileScreen' : 'LoginScreen');
                                                     }} />
-                                                    <Separator theme={theme} />
-                                                    <ConfigurationItem theme={theme} components={components} title={'Tema escuro'}>
-                                                        <Atoms.TogglerButton value={name === 'dark'} onPress={() => functions.toggleTheme()} />
+                                                    <Separator theme={theme.theme} />
+                                                    <ConfigurationItem theme={theme.theme} components={theme.components} title={'Tema escuro'}>
+                                                        <Atoms.TogglerButton value={theme.name === 'dark'} onPress={() => theme.functions.toggleTheme()} />
                                                     </ConfigurationItem>
-                                                    <Separator theme={theme} />
-                                                    {(user.isLogged && user.user['usu_permissoes'].includes('mobile.alterar_servidor')) ?
+                                                    <Separator theme={theme.theme} />
+                                                    {(user.isLogged && (user.user['usu_permissoes']).some(v => ['mobile.alterar_servidor', 'mobile.todas_permissoes'].includes(v))) ?
                                                         <View style={{width: '100%'}}>
-                                                            <ConfigurationItem theme={theme} components={components} title={'IP do Servidor'}>
+                                                            <ConfigurationItem theme={theme.theme} components={theme.components} title={'IP do Servidor'}>
                                                                 <Atoms.DefaultInput
                                                                     viewStyle={{
                                                                         flex: 1,
                                                                         maxWidth: 130,
                                                                     }}
-                                                                    value={configs.configurations.server_ip}
-                                                                    setValue={(value) => {
-                                                                        configs.functions.setValue('server_ip', value);
-                                                                    }}
+                                                                    ref={this.server_ip}
+                                                                    value={this.configs.server_ip}
+                                                                    keyboardType={'number-pad'}
+                                                                    fixKeyboard
                                                                 />
                                                             </ConfigurationItem>
-                                                            <Separator theme={theme} />
-                                                            <ConfigurationItem theme={theme} components={components} title={'Porta do Servidor'}>
+                                                            <Separator theme={theme.theme} />
+                                                            <ConfigurationItem theme={theme.theme} components={theme.components} title={'Porta do Servidor'}>
                                                                 <Atoms.DefaultInput
                                                                     viewStyle={{
                                                                         flex: 1,
                                                                         maxWidth: 70,
                                                                     }}
-                                                                    value={configs.configurations.server_port}
-                                                                    setValue={(value) => {
-                                                                        configs.functions.setValue('server_port', value);
-                                                                    }}
+                                                                    ref={this.server_port}
+                                                                    value={this.configs.server_port}
+                                                                    keyboardType={'number-pad'}
+                                                                    fixKeyboard
                                                                 />
                                                             </ConfigurationItem>
-                                                            <Separator theme={theme} />
-                                                            <ConfigurationItem theme={theme} components={components} title={'Método do Servidor'}>
+                                                            <Separator theme={theme.theme} />
+                                                            <ConfigurationItem theme={theme.theme} components={theme.components} title={'Método do Servidor'}>
                                                                 <Atoms.DefaultInput
                                                                     viewStyle={{
                                                                         flex: 1,
                                                                         maxWidth: 70,
                                                                     }}
-                                                                    value={configs.configurations.server_method}
-                                                                    setValue={(value) => {
-                                                                        configs.functions.setValue('server_method', value);
+                                                                    ref={this.server_method}
+                                                                    value={this.configs.server_method}
+                                                                    fixKeyboard
+                                                                />
+                                                            </ConfigurationItem>
+                                                            <Separator theme={theme.theme} />
+                                                            <ConfigurationItem theme={theme.theme} components={theme.components}>
+                                                                <Atoms.DefaultButton
+                                                                    style={{
+                                                                        width: '100%',
+                                                                        marginHorizontal: 'auto',
+                                                                    }}
+                                                                    title={'Salvar'}
+                                                                    onPress={() => {
+                                                                        functions.setValue('server_ip', this.server_ip.current.getText());
+                                                                        functions.setValue('server_port', this.server_port.current.getText());
+                                                                        functions.setValue('server_method', this.server_method.current.getText());
+                                                                        Alert.alert('Sucesso!', 'As configurações foram salvas com sucesso.', [{text: 'OK'}]);
                                                                     }}
                                                                 />
                                                             </ConfigurationItem>
-                                                            <Separator theme={theme} />
+                                                            <Separator theme={theme.theme} />
                                                         </View>
                                                     : null}
                                                 </View>

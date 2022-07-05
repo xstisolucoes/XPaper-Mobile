@@ -3,7 +3,7 @@ import * as Storage from '../storage';
 
 const defaultConfigurations = {
     server_ip: '192.168.0.10',
-    server_port: '8080',
+    server_port: '8081',
     server_method: 'http',
 };
 
@@ -22,7 +22,6 @@ const getCacheConfigurations = async () => {
     }
 
     return configurations;
-    
 }
 
 class ConfigurationsContextProvider extends React.Component {

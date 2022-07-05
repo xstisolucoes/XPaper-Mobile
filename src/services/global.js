@@ -1,6 +1,7 @@
 import * as Storage from './storage';
 import { initializeApp } from 'firebase/app';
 import * as Network from 'expo-network';
+import * as Configs from './context/configurations';
 
 module.exports = {
     App: null,
@@ -20,9 +21,17 @@ module.exports = {
         DATE : 'date',
     },
 
+    getConfigs: () => {
+        return Configs.ConfigurationsContext._currentValue.configurations;
+    },
+
+    generateRandomKey: () => (
+        (Math.random() + 1).toString(36).substring(3)
+    ),
+
     checkInternetConnection: async () => {
         let state = await Network.getNetworkStateAsync();
-        return state.isInternetReachable && state.type == Network.NetworkStateType.WIFI;
+        return state.isInternetReachable && (state.type == Network.NetworkStateType.WIFI || state.type == Network.NetworkStateType.VPN);
     },
 
     formatRequestParams: (params) => {

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { View, Alert, FlatList } from 'react-native';
 import { Atoms } from '_components';
 import { Contexts } from '_services';
-import Dialog from 'react-native-dialog';
 
 const ReceivementChecklistItem = (props) => {
     return (
@@ -14,6 +13,9 @@ const ReceivementChecklistItem = (props) => {
                     value={props.item['p_value']}
                     setValue={(value) => {
                         functions.setValue(props.item['p_codigo'], value);
+                    }}
+                    onError={() => {
+                        props.navigation.navigate('ReceivementSubquestionsScreen', {item: props.item});
                     }}
                 />
             )}
@@ -28,7 +30,6 @@ class ReceivementChecklistScreen extends React.Component {
             item: this.props.route.params.item,
             value: 0,
             refreshing: false,
-            inputDialogVisible: false,
             qtdeNaoConforme: '0',
         }
 
@@ -36,7 +37,7 @@ class ReceivementChecklistScreen extends React.Component {
         this._inputRefugo = React.createRef();
     }
 
-    verificaFinalInspecao(data, functions, refugo) {
+    verificaFinalInspecao(data, functions, refugo, pes_codigo) {
         let preenchido = true;
         let conforme = true;
 
@@ -59,33 +60,11 @@ class ReceivementChecklistScreen extends React.Component {
                 ],
             );
         } else {
-            if (!conforme) {
-                Alert.alert(
-                    'Não conformidade',
-                    'O produto apresenta não conformidade(s), deseja informar a quantidade não conforme?',
-                    [
-                        {
-                            text: 'Não',
-                            style: 'cancel',
-                            onPress: () => this.verificaRefugo(refugo, functions, data),
-                        },
-                        {
-                            text: 'Sim',
-                            onPress: () => {
-                                this.setState({
-                                    inputDialogVisible: true,
-                                });
-                            },
-                        }
-                    ],
-                );
-            } else {
-                this.verificaRefugo(refugo, functions, data);
-            }
+            this.verificaRefugo(refugo, functions, data, pes_codigo);
         }
     }
 
-    verificaRefugo(refugo, functions, data) {
+    verificaRefugo(refugo, functions, data, pes_codigo) {
         Alert.alert(
             'Refugo',
             'O produto apresenta refugo?',
@@ -93,40 +72,44 @@ class ReceivementChecklistScreen extends React.Component {
                 {
                     text: 'Não',
                     style: 'cancel',
-                    onPress: () => this.finalizaInspecao(functions, data),
+                    onPress: async () => {
+                        let checklist = [];
+                        data.forEach((object) => {
+                            let sub_perguntas = [];
+                            if (object["p_value"] == 2) {
+                                object["sub_perguntas"].forEach((sub_pergunta) => {
+                                    if (sub_pergunta['value'] == true) {
+                                        sub_perguntas.push({sp_codigo: sub_pergunta['SP_CODIGO']});
+                                    }
+                                });
+                            }
+                            checklist.push({p_codigo: object["p_codigo"], p_value: object["p_value"], sub_perguntas: sub_perguntas});
+                        });
+                        await this.setState({
+                            refreshing: true,
+                        });
+                        await functions.saveInspecaoRecebimento(
+                            this.state.item.infe_numero_nf,
+                            this.state.item.infe_serie_nf,
+                            this.state.item.pes_codigo,
+                            this.state.item.infe_codigo,
+                            this.state.item.pc_codigo,
+                            pes_codigo,
+                            checklist,
+                            [], 
+                            0);
+                        await functions.updateRecebimentosNotasItens(this.state.item.infe_numero_nf);
+                        await this.setState({
+                            refreshing: false,
+                        });
+                        this.props.navigation.pop(1);
+                    },
                 },
                 {
                     text: 'Sim',
                     onPress: async () => {
                         await refugo.functions.updateRecebimentosNotasRefugo(this.state.item['infe_numero_nf'], this.state.item['infe_serie_nf'], this.state.item['pes_codigo'], this.state.item['infe_codigo']);
-                        this.props.navigation.navigate('ReceivementRefugoScreen', {item: this.state.item, data: data});
-                    }
-                }
-            ],
-        );
-    }
-
-    async finalizaInspecao(functions, data) {
-        Alert.alert(
-            'Endereço',
-            'Selecione o endereço do estoque no qual o produto será alocado.',
-            [
-                {
-                    text: 'Ok',
-                    onPress: async () => {
-                        let item = this.state.item;
-                        let checklist = [];
-                        data.forEach((object) => {
-                            checklist.push({p_codigo: object["p_codigo"], p_value: object["p_value"]});
-                        });
-                        await this.setState({
-                            refreshing: true,
-                        });
-                        await functions.updateProductAddress(1, item.pc_codigo, 1);
-                        this.props.navigation.navigate('AddStockAddressScreen', {item: this.state.item, checklist: checklist, refugo: [], pop: 2});
-                        await this.setState({
-                            refreshing: false,
-                        });
+                        this.props.navigation.navigate('ReceivementRefugoScreen', {item: this.state.item, data: data, pes_codigo: pes_codigo});
                     }
                 }
             ],
@@ -144,8 +127,8 @@ class ReceivementChecklistScreen extends React.Component {
                                     {({ recebimentosNotasChecklist, functions }) => (
                                         <Contexts.RecebimentosNotasRefugo.RecebimentosNotasRefugoContext.Consumer>
                                             {(refugo) => (
-                                                <Contexts.ProductAddress.ProductAddressContext.Consumer>
-                                                    {(address) => (
+                                                <Contexts.User.UserContext.Consumer>
+                                                    {(user) => (
                                                         <View 
                                                             style={{
                                                                 flex: 1,
@@ -153,22 +136,6 @@ class ReceivementChecklistScreen extends React.Component {
                                                                 alignItems: 'center',
                                                             }}
                                                         >
-                                                            <Dialog.Container visible={this.state.inputDialogVisible}>
-                                                                <Dialog.Title style={{fontWeight: 'bold', fontSize: 18}}>Não Conformidade</Dialog.Title>
-                                                                <Dialog.Description style={{fontSize: 16}}>Quantidade não conforme</Dialog.Description>
-                                                                <Dialog.Input value={this.state.qtdeNaoConforme} style={{fontSize: 16}} keyboardType={'number-pad'} onChangeText={(text) => this.setState({qtdeNaoConforme: text})} />
-                                                                <Dialog.Button style={{color: '#1C73B4', fontSize: 16}} label="Cancelar" onPress={() => {
-                                                                    this.setState({
-                                                                        inputDialogVisible: false,
-                                                                    });
-                                                                }} />
-                                                                <Dialog.Button style={{color: '#1C73B4', fontSize: 16}}  label="Confirmar" onPress={() => {
-                                                                    this.setState({
-                                                                        inputDialogVisible: false,
-                                                                    });
-                                                                    this.verificaRefugo(refugo);
-                                                                }} />
-                                                            </Dialog.Container>
                                                             <FlatList
                                                                 style={{
                                                                     width: '100%',
@@ -198,14 +165,14 @@ class ReceivementChecklistScreen extends React.Component {
                                                                                 maxWidth: 200,
                                                                             }}
                                                                             title={'Finalizar'}
-                                                                            onPress={() => this.verificaFinalInspecao(recebimentosNotasChecklist, address.functions, refugo)}
+                                                                            onPress={() => this.verificaFinalInspecao(recebimentosNotasChecklist, recebimentosNotasItem.functions, refugo, user.user.pes_codigo)}
                                                                         />
                                                                     </View>
                                                                 )}
                                                             />
                                                         </View>
                                                     )}
-                                                </Contexts.ProductAddress.ProductAddressContext.Consumer>
+                                                </Contexts.User.UserContext.Consumer>
                                             )}
                                         </Contexts.RecebimentosNotasRefugo.RecebimentosNotasRefugoContext.Consumer>
                                     )}

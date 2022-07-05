@@ -68,14 +68,17 @@ class HomeScreen extends React.Component {
                                                                         ListFooterComponent={() => (
                                                                             this.state.connected == false ? <Atoms.Errors.NoConnection /> : 
                                                                             user.isLogged == false ? <Atoms.Errors.NotLogged /> : 
-                                                                            (!(user.user['usu_permissoes']).includes('mobile.modulo_recebimento') &&
-                                                                            !(user.user['usu_permissoes']).includes('mobile.modulo_manutencao') &&
-                                                                            !(user.user['usu_permissoes']).includes('mobile.modulo_inspecao_veicular') &&
-                                                                            !(user.user['usu_permissoes']).includes('mobile.modulo_estoque_reservado') &&
-                                                                            !(user.user['usu_permissoes']).includes('mobile.modulo_estoque_produtos')) ? <Atoms.Errors.NoItens /> : null
+                                                                            (!(user.user['usu_permissoes']).some(v => [
+                                                                                'mobile.modulo_recebimento',
+                                                                                'mobile.modulo_manutencao',
+                                                                                'mobile.modulo_inspecao_veicular',
+                                                                                'mobile.modulo_estoque_reservado',
+                                                                                'mobile.modulo_estoque_produtos',
+                                                                                'mobile.todas_permissoes',
+                                                                            ].includes(v)))  ? <Atoms.Errors.NoItens /> : null
                                                                         )}
                                                                         data={this.state.connected == false || user.isLogged == false ? [] : this.formatData([
-                                                                            (user.isLogged && (user.user['usu_permissoes']).includes('mobile.modulo_recebimento')) ? {
+                                                                            (user.isLogged && (user.user['usu_permissoes']).some(v => ['mobile.modulo_recebimento', 'mobile.todas_permissoes'].includes(v))) ? {
                                                                                 key: "module_receivement",
                                                                                 name: "Recebimento",
                                                                                 onPress: async () => {
@@ -86,7 +89,7 @@ class HomeScreen extends React.Component {
                                                                                 },
                                                                                 icon: () => (<Icons.Receivement color={'#FFFFFF'} size={36} />),
                                                                             } : null,
-                                                                            (user.isLogged && (user.user['usu_permissoes']).includes('mobile.modulo_manutencao')) ? {
+                                                                            (user.isLogged && (user.user['usu_permissoes']).some(v => ['mobile.modulo_manutencao', 'mobile.todas_permissoes'].includes(v))) ? {
                                                                                 key: "module_maintenance",
                                                                                 name: "Manutenção",
                                                                                 onPress: async () => {
@@ -97,7 +100,7 @@ class HomeScreen extends React.Component {
                                                                                 },
                                                                                 icon: () => (<Icons.Maintenance color={'#FFFFFF'} size={36} />),
                                                                             } : null,
-                                                                            (user.isLogged && (user.user['usu_permissoes']).includes('mobile.modulo_inspecao_veicular')) ? {
+                                                                            (user.isLogged && (user.user['usu_permissoes']).some(v => ['mobile.modulo_inspecao_veicular', 'mobile.todas_permissoes'].includes(v))) ? {
                                                                                 key: "module_vehicle_inspection",
                                                                                 name: "Inspeção Veicular",
                                                                                 onPress: async () => {
@@ -108,7 +111,7 @@ class HomeScreen extends React.Component {
                                                                                 },
                                                                                 icon: () => (<Icons.Inspection color={'#FFFFFF'} size={36} />),
                                                                             } : null,
-                                                                            (user.isLogged && (user.user['usu_permissoes']).includes('mobile.modulo_estoque_reservado')) ? {
+                                                                            (user.isLogged && (user.user['usu_permissoes']).some(v => ['mobile.modulo_estoque_reservado', 'mobile.todas_permissoes'].includes(v))) ? {
                                                                                 key: "module_reserved_stock",
                                                                                 name: "Estoque Reservado",
                                                                                 onPress: async () => {
@@ -119,7 +122,7 @@ class HomeScreen extends React.Component {
                                                                                 },
                                                                                 icon: () => (<Icons.Stock color={'#FFFFFF'} size={36} />),
                                                                             } : null,
-                                                                            (user.isLogged && (user.user['usu_permissoes']).includes('mobile.modulo_estoque_produtos')) ? {
+                                                                            (user.isLogged && (user.user['usu_permissoes']).some(v => ['mobile.modulo_estoque_produtos', 'mobile.todas_permissoes'].includes(v))) ? {
                                                                                 key: "module_product_stock",
                                                                                 name: "Estoque de Produtos",
                                                                                 onPress: async () => {

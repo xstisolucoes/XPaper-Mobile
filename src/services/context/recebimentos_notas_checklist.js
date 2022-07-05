@@ -56,11 +56,26 @@ class RecebimentosNotasChecklistContextProvider extends React.Component {
             })
         }
 
+        this.setSubquestionValue = async (p_codigo, value) => {
+            let data = this.state.recebimentosNotasChecklist;
+
+            data.forEach((object) => {
+                if (object['p_codigo'] == p_codigo) {
+                    object['sub_perguntas'] = value;
+                }
+            });
+
+            this.setState({
+                recebimentosNotasChecklist: data,
+            })
+        }
+
         this.state = {
             recebimentosNotasChecklist: [],
             functions                 : {
                 updateRecebimentosNotasChecklist: this.updateRecebimentosNotasChecklist,
                 setValue                        : this.setValue,
+                setSubquestionValue             : this.setSubquestionValue,
             }
         }
     }

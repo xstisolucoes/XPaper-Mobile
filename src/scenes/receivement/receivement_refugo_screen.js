@@ -45,77 +45,87 @@ class ReceivementRefugoScreen extends React.Component {
                 >
                     <Contexts.Theme.ThemeContext.Consumer>
 				        {({ theme, components }) => (
-                            <Contexts.ProductAddress.ProductAddressContext.Consumer>
-                                {(productAddress) => (
+                            <Contexts.User.UserContext.Consumer>
+                                {(user) => (
                                     <Contexts.RecebimentosNotasRefugo.RecebimentosNotasRefugoContext.Consumer>
                                         {({ recebimentosNotasRefugo, functions }) => (
-                                            <FlatList
-                                                style={{
-                                                    width: '100%',
-                                                }}
-                                                data={recebimentosNotasRefugo}
-                                                renderItem={(object) => (
-                                                    <ListRefugoItem item={object.item} navigation={this.props.navigation} theme={theme} components={components} />
-                                                )}
-                                                onRefresh={async () => {
-                                                    this.setState({refreshing: true});
-                                                    await functions.updateRecebimentosNotasRefugo(this.state.item['infe_numero_nf'], this.state.item['infe_serie_nf'], this.state.item['pes_codigo'], this.state.item['infe_codigo']);
-                                                    this.setState({refreshing: false});
-                                                }}
-                                                refreshing={this.state.refreshing}
-                                                keyExtractor={(item) => item.key}
-                                                ListFooterComponent={() => (
-                                                    <View
+                                            <Contexts.RecebimentosNotasItens.RecebimentosNotasItensContext.Consumer>
+                                                {(recebimentosNotasItem) => (
+                                                    <FlatList
                                                         style={{
                                                             width: '100%',
-                                                            padding: 20,
-                                                            alignItems: 'center',
                                                         }}
-                                                    >
-                                                        <Atoms.DefaultButton
-                                                            style={{
-                                                                width: '100%',
-                                                                maxWidth: 200,
-                                                            }}
-                                                            title={'Salvar'}
-                                                            onPress={() => {
-                                                                Alert.alert(
-                                                                    'Endereço',
-                                                                    'Selecione o endereço do estoque no qual o produto será alocado.',
-                                                                    [
-                                                                        {
-                                                                            text: 'Ok',
-                                                                            onPress: async () => {
-                                                                                let item = this.state.item;
-                                                                                let checklist = [];
-                                                                                this.state.data.forEach((object) => {
-                                                                                    checklist.push({p_codigo: object["p_codigo"], p_value: object["p_value"]});
-                                                                                });
-                                                                                let refugo = [];
-                                                                                recebimentosNotasRefugo.forEach((object) => {
-                                                                                    refugo.push({mo_codigo: object.mo_codigo, infer_quantidade: object.infer_quantidade});
-                                                                                });
-                                                                                await this.setState({
-                                                                                    refreshing: true,
-                                                                                });
-                                                                                await productAddress.functions.updateProductAddress(1, item.pc_codigo, item.pcf_codigo);
-                                                                                this.props.navigation.navigate('AddStockAddressScreen', {item: this.state.item, checklist: checklist, refugo: refugo, pop: 3});
-                                                                                await this.setState({
-                                                                                    refreshing: false,
+                                                        data={recebimentosNotasRefugo}
+                                                        renderItem={(object) => (
+                                                            <ListRefugoItem item={object.item} navigation={this.props.navigation} theme={theme} components={components} />
+                                                        )}
+                                                        onRefresh={async () => {
+                                                            this.setState({refreshing: true});
+                                                            await functions.updateRecebimentosNotasRefugo(this.state.item['infe_numero_nf'], this.state.item['infe_serie_nf'], this.state.item['pes_codigo'], this.state.item['infe_codigo']);
+                                                            this.setState({refreshing: false});
+                                                        }}
+                                                        refreshing={this.state.refreshing}
+                                                        keyExtractor={(item) => item.key}
+                                                        ListFooterComponent={() => (
+                                                            <View
+                                                                style={{
+                                                                    width: '100%',
+                                                                    padding: 20,
+                                                                    alignItems: 'center',
+                                                                }}
+                                                            >
+                                                                <Atoms.DefaultButton
+                                                                    style={{
+                                                                        width: '100%',
+                                                                        maxWidth: 200,
+                                                                    }}
+                                                                    title={'Salvar'}
+                                                                    onPress={async () => {
+                                                                        let checklist = [];
+                                                                        this.state.data.forEach((object) => {
+                                                                            let sub_perguntas = [];
+                                                                            if (object["p_value"] == 2) {
+                                                                                object["sub_perguntas"].forEach((sub_pergunta) => {
+                                                                                    if (sub_pergunta['value'] == true) {
+                                                                                        sub_perguntas.push({sp_codigo: sub_pergunta['SP_CODIGO']});
+                                                                                    }
                                                                                 });
                                                                             }
-                                                                        }
-                                                                    ],
-                                                                );
-                                                            }}
-                                                        />
-                                                    </View>
+                                                                            checklist.push({p_codigo: object["p_codigo"], p_value: object["p_value"], sub_perguntas: sub_perguntas});
+                                                                        });
+                                                                        let refugo = [];
+                                                                        recebimentosNotasRefugo.forEach((object) => {
+                                                                            refugo.push({mo_codigo: object.mo_codigo, infer_quantidade: object.infer_quantidade});
+                                                                        });
+                                                                        await this.setState({
+                                                                            refreshing: true,
+                                                                        });
+                                                                        await recebimentosNotasItem.functions.saveInspecaoRecebimento(
+                                                                            this.state.item.infe_numero_nf,
+                                                                            this.state.item.infe_serie_nf,
+                                                                            this.state.item.pes_codigo,
+                                                                            this.state.item.infe_codigo,
+                                                                            this.state.item.pc_codigo,
+                                                                            user.user.pes_codigo,
+                                                                            checklist,
+                                                                            refugo, 
+                                                                            0);
+                                                                        await recebimentosNotasItem.functions.updateRecebimentosNotasItens(this.state.item.infe_numero_nf);
+                                                                        await this.setState({
+                                                                            refreshing: false,
+                                                                        });
+                                                                        this.props.navigation.pop(2);
+                                                                    }}
+                                                                />
+                                                            </View>
+                                                        )}
+                                                    />
                                                 )}
-                                            />
+                                            </Contexts.RecebimentosNotasItens.RecebimentosNotasItensContext.Consumer>
                                         )}
                                     </Contexts.RecebimentosNotasRefugo.RecebimentosNotasRefugoContext.Consumer>
                                 )}
-                            </Contexts.ProductAddress.ProductAddressContext.Consumer>
+                            </Contexts.User.UserContext.Consumer>
                         )}
                     </Contexts.Theme.ThemeContext.Consumer>
                 </View>

@@ -6,7 +6,7 @@ import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import { Global } from '_services';
 import { View } from 'react-native';
-import AppLoading from 'expo-app-loading';
+import * as SplashScreen from 'expo-splash-screen';
 
 Global.firebaseApp();
 
@@ -37,10 +37,13 @@ class App extends React.Component{
 
     async _loadSources() {
         try {
-            
+            await SplashScreen.preventAutoHideAsync();
             await this._loadFontsAsync();
             await this._loadNotificationModule();
+        } catch (e) {
+            console.warn(e);
         } finally {
+            await SplashScreen.hideAsync();
             this.setState({
                 isReady: true,
             });
@@ -61,7 +64,6 @@ class App extends React.Component{
                 return;
             }
             token = (await Notifications.getExpoPushTokenAsync()).data;
-            console.log(token);
         } else {
             console.log('Must use physical device for Push Notifications');
         }
@@ -113,18 +115,17 @@ class App extends React.Component{
         }
         
         return (
-            this.state.isReady == false ?
-            <AppLoading/>
-                :
-            <View
-                style={{
-                    flex: 1,
-                }}
-            >
-                <GlobalContext>
-                    <RootNavigator />
-                </GlobalContext>
-            </View>
+            this.state.isReady ?
+                <View
+                    style={{
+                        flex: 1,
+                    }}
+                >
+                    <GlobalContext>
+                        <RootNavigator />
+                    </GlobalContext>
+                </View>
+            : null
         );
     }
 }

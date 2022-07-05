@@ -7,11 +7,13 @@ class DefaultInput extends React.Component {
     constructor(props) {
         super(props);
 
-        this._value = '';
+        this.state = {
+            _value: this.props.value ?? '',
+        }
     }
 
     getText() {
-        return this._value;
+        return this.state._value;
     }
 
     render() {
@@ -74,10 +76,11 @@ class DefaultInput extends React.Component {
                                             },
                                             ...this.props.inputStyle,
                                         },
+                                        value: this.props.fixKeyboard ? this.state._value : this.props.value,
                                         ref: (ref) => this.input = ref,
                                         editable: this.props.disabled ? false : true,
                                         onChangeText: (value) => {
-                                            this._value = value;
+                                            this.setState({_value: value});
                                             if (this.props.setValue) {
                                                 this.props.setValue(value);
                                             }

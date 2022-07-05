@@ -59,8 +59,8 @@ class ProductStockDetailScreen extends React.Component {
                             <Atoms.DefaultInput labelTitle={'Código do Produto'} multiline={true} disabled value={Global.numberWithPoints(this.state.item['pc_codigo'])} />
                             <Atoms.DefaultInput labelTitle={'Descrição'} multiline={true} disabled value={this.state.item['pc_descricao']} />
                             <Atoms.DefaultInput labelTitle={'Medidas'} multiline={true} disabled value={this.state.item['pc_medidas']} />
-                            <Atoms.DefaultInput labelTitle={'Composição Interna'} multiline={true} disabled value={this.state.item['pc_composicao']} />
-                            <Atoms.DefaultInput labelTitle={'Composição do Fornecedor'} multiline={true} disabled value={this.state.item['cps_descricao']} />
+                            <Atoms.DefaultInput labelTitle={'Papelão Ondulado'} multiline={true} disabled value={this.state.item['pc_composicao']} />
+                            <Atoms.DefaultInput labelTitle={'P.O. do Fornecedor'} multiline={true} disabled value={this.state.item['cps_descricao']} />
                             <Atoms.DefaultInput labelTitle={'Vincos'} multiline={true} disabled value={this.state.item['pc_vincos']} />
                             <Atoms.DefaultInput labelTitle={'Fornecedor'} multiline={true} disabled value={this.state.item['pes_forn_fantasia']} />
                             <Atoms.DefaultInput labelTitle={'Razão Social'} multiline={true} disabled value={this.state.item['pes_forn_razao_social']} />

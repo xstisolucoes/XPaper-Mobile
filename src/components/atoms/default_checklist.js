@@ -91,8 +91,19 @@ class DefaultChecklist extends React.Component {
                                             justifyContent: 'center',
                                         }}
                                         onPress={() => {
-                                            if (this.props.setValue) {
-                                                this.props.setValue(this.props.value == 2 ? 0 : 2);
+                                            if (this.props.onError) {
+                                                if (this.props.setValue && this.props.value !== 2) {
+                                                    this.props.setValue(0);
+                                                }
+                                                this.props.onError(() => {
+                                                    if (this.props.setValue) {
+                                                        this.props.setValue(this.props.value == 2 ? 0 : 2);
+                                                    }
+                                                });
+                                            } else {
+                                                if (this.props.setValue) {
+                                                    this.props.setValue(this.props.value == 2 ? 0 : 2);
+                                                }
                                             }
                                         }}
                                         android_ripple={{

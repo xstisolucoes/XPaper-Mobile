@@ -34,10 +34,6 @@ const ListReceivementItem = (props) => {
                                 <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_REGULAR]}>{props.item['nfe_data_entrada']}</Text>
                             </Text>
                             <Text>
-                                <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_BOLD]}>Fornecedor: </Text>
-                                <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_REGULAR]}>{props.item['pes_razao']}</Text>
-                            </Text>
-                            <Text>
                                 <Text style={[{fontSize: 14, color: props.theme.defaultTextColor}, Typography.SECONDARY_FONT_BOLD]}>Status: </Text>
                                 <Text
                                     style={[
